@@ -9,8 +9,11 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-- [Contributing](#contributing)
-- [License](#license)
+  - [Users](#api/v1/users)
+  - [Armies](#papi/v1/armies)
+  - [Squads](#papi/v1/squads)
+  - [Tech](#papi/v1/tech)
+  - [Battles](#papi/v1/battles)
 
 ## Features
 
@@ -126,7 +129,7 @@ User Endpoints:
 
 ```DELETE /api/tech/:id```: Delete a technology.
 
-## api/v1/battle:
+## api/v1/battles:
 
 ```POST /api/battles```: Start a battle between armies. (id, sideOne[army...], sideTwo:[army...])
 
