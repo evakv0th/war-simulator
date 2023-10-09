@@ -9,11 +9,11 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-  - [Users](#api/v1/users)
-  - [Armies](#papi/v1/armies)
-  - [Squads](#papi/v1/squads)
-  - [Tech](#papi/v1/tech)
-  - [Battles](#papi/v1/battles)
+  - [Users](#users)
+  - [Armies](#armies)
+  - [Squads](#squads)
+  - [Tech](#tech)
+  - [Battles](#battles)
 
 ## Features
 
@@ -64,7 +64,7 @@ Here are some of the available API endpoints:
 
 User Endpoints:
 
-## api/v1/users:
+## Users:
 ```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
 
 ```GET /api/users/:id```: Get a single user by ID.
@@ -77,7 +77,7 @@ User Endpoints:
 
 ```DELETE /api/users/:id```: Delete a user.
 
-## api/v1/armies:
+## Armies:
 
 ```GET /api/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
 
@@ -101,7 +101,7 @@ User Endpoints:
 
 -**patriotic** - more men - more strength. Each squad will multiply strength of all squads by 0,05 (max bonus - 2x strength)
 
-## api/v1/squads:
+## Squads:
 
 ```GET /api/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
 
@@ -115,7 +115,7 @@ User Endpoints:
 
 ```DELETE /api/squads/:id```: Delete a squad.
 
-## api/v1/tech:
+## Tech:
 
 ```GET /api/tech```: Get a list of technologies. (id, name:string, strength:number, nation: army, type: plane |  tank)
 
@@ -129,7 +129,7 @@ User Endpoints:
 
 ```DELETE /api/tech/:id```: Delete a technology.
 
-## api/v1/battles:
+## Battles:
 
 ```POST /api/battles```: Start a battle between armies. (id, sideOne[army...], sideTwo:[army...])
 
