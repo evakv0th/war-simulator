@@ -62,7 +62,7 @@ Here are some of the available API endpoints:
 User Endpoints:
 
 ## api/v1/users:
-```GET /api/v1/users```: Get a list of users.
+```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
 
 ```GET /api/users/:id```: Get a single user by ID.
 
@@ -76,7 +76,7 @@ User Endpoints:
 
 ## api/v1/armies:
 
-```GET /api/armies```: Get a list of armies.
+```GET /api/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
 
 ```GET /api/armies/:id```: Get a single army by ID.
 
@@ -88,9 +88,19 @@ User Endpoints:
 
 ```DELETE /api/armies/:id```: Delete an army.
 
+### Advantages in army:
+
+-**air** - each aircraft will have 1.5x strength
+
+-**heavyTech** - each tank will have 1.5x strength
+
+-**minefield** - at the start of the battle each enemy unit (except for planes) will have strength reduction. (tanks will have 0.7x strength, troops 0.9x strength)
+
+-**patriotic** - more men - more strength. Each squad will multiply strength of all squads by 0,05 (max bonus - 2x strength)
+
 ## api/v1/squads:
 
-```GET /api/squads```: Get a list of squads.
+```GET /api/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
 
 ```GET /api/squads/:id```: Get a single squad by ID.
 
@@ -104,7 +114,7 @@ User Endpoints:
 
 ## api/v1/tech:
 
-```GET /api/tech```: Get a list of technologies.
+```GET /api/tech```: Get a list of technologies. (id, name:string, strength:number, nation: army, type: plane |  tank)
 
 ```GET /api/tech/:id```: Get a single technology by ID.
 
@@ -118,7 +128,7 @@ User Endpoints:
 
 ## api/v1/battle:
 
-```POST /api/battles```: Start a battle between armies.
+```POST /api/battles```: Start a battle between armies. (id, sideOne[army...], sideTwo:[army...])
 
 
 For more details on how to use these endpoints, refer to the API documentation provided in the project.
