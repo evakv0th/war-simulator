@@ -35,7 +35,7 @@ Before you start, make sure you have the following prerequisites installed:
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/war-simulator.git
+   git clone https://github.com/evakv0th/war-simulator.git
 
 2. Install dependencies:
 
