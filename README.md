@@ -1024,5 +1024,74 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-
 For more details on how to use these endpoints, refer to the API documentation provided in the project.
+
+```
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table users {
+  id integer [primary key]
+  name varchar
+  type varchar
+  email varchar
+  nation armies
+}
+
+
+Table armies {
+  id integer [primary key]
+  name varchar
+  advantage varchar
+  user_id integer
+  fuelAmmount integer
+  bulletsAmmount integer
+}
+
+Table tanks {
+   id integer [primary key]
+   name varchar
+   strength integer
+   fuelReq integer
+   army_id integer
+}
+
+Table planes {
+  id integer [primary key]
+   name varchar
+   airFieldStrength integer
+   surfaceStrength integer
+   fuelReq integer
+   army_id integer
+}
+
+Table squads {
+   id integer [primary key]
+   name varchar
+   type varchar
+   army_id integer
+}
+
+Table weapons {
+  id integer [primary key]
+  name varchar
+  strength integer
+  squad squads
+  bulletsReq integer
+}
+
+Table squadsWeapons {
+  id integer
+  squadId integer
+  weaponId integer
+}
+
+Ref: tanks.army_id > armies.id
+Ref: planes.army_id > armies.id
+Ref: squads.army_id > armies.id
+Ref: weapons.id < squadsWeapons.weaponId
+Ref: squads.id < squadsWeapons.squadId
+Ref: users.id - armies.user_id 
+
+
+```
