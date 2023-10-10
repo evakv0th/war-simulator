@@ -73,7 +73,13 @@ Here are some of the available API endpoints:
         "email": "dunder@gmail.com",
         "nation": "blueArmy"
       },
-      ...
+     {
+        "id": 4,
+        "name": "Pam",
+        "type": "user",
+        "email": "dunder3@gmail.com",
+        "nation": "greenArmy"
+      },
     ]
     ```
  - response 401 Unauthorized:
@@ -103,23 +109,23 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
  - response 401 Unauthorized:
-  ```json
+```json
 {
 "message": "Authorization Required"
 }
 ```
 - response 404 Not Found:
-  ```json
-  {
-  "message": "user with that id not found"
-  }
-  ```
+```json
+{
+"message": "user with that id not found"
+}
+```
 - response 500 Internal Server Error:
-  ```json
-  {
-  "message": "Internal Server Error"
-  }
-  ```
+```json
+{
+"message": "Internal Server Error"
+}
+```
 ```POST /api/v1/users```: Create a new user.
  - response 201 Created:
   ```json
@@ -138,23 +144,23 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 - response 400 Bad Request:
-  ```json
-  {
-  "message": "Invalid data"
-  }
-  ```
+```json
+{
+"message": "Invalid data"
+}
+```
 - response 500 Internal Server Error:
-  ```json
-  {
-  "message": "Internal Server Error"
-  }
-  ```
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 
 ```PATCH /api/v1/users/:id```: Partially update a user's information.
 
  - response 200 OK:
-  ```json
+```json
 {
 "id": 2,
 "name":"UpdatedName",
@@ -164,29 +170,29 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
  - response 401 Unauthorized:
-  ```json
+```json
 {
 "message": "Authorization Required"
 }
 ```
 - response 400 Bad Request:
-  ```json
-  {
-  "message": "Invalid data"
-  }
-  ```
+```json
+{
+"message": "Invalid data"
+}
+```
   - response 404 Not Found:
-  ```json
-  {
-  "message": "user with that id not found"
-  }
-  ```
+```json
+{
+"message": "user with that id not found"
+}
+```
 - response 500 Internal Server Error:
-  ```json
-  {
-  "message": "Internal Server Error"
-  }
-  ```
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 ```DELETE /api/v1/users/:id```: Delete a user.
 
@@ -199,17 +205,17 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
   - response 404 Not Found:
-  ```json
-  {
-  "message": "user with that id not found"
-  }
-  ```
+```json
+{
+"message": "user with that id not found"
+}
+```
 - response 500 Internal Server Error:
-  ```json
-  {
-  "message": "Internal Server Error"
-  }
-  ```
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 ## Armies:
 
