@@ -73,7 +73,7 @@ Here are some of the available API endpoints:
         "email": "dunder@gmail.com",
         "nation": "blueArmy"
       },
-      // ...
+      ...
     ]
     ```
  - response 401 Unauthorized:
@@ -95,56 +95,58 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  - response 200 OK:
   ```json
 {
-id: 2,
-name:"Michael Scott",
-type: "admin",
-email: "dunder@gmail.com",
-nation: blueArmy}
+"id": 2,
+"name":"Michael Scott",
+"type": "admin",
+"email": "dunder@gmail.com",
+"nation": "blueArmy"
+}
 ```
  - response 401 Unauthorized:
   ```json
 {
-message: Authorization Required
+"message": "Authorization Required"
 }
 ```
 - response 404 Not Found:
   ```json
   {
-  message: user with that id not found
+  "message": "user with that id not found"
   }
   ```
 - response 500 Internal Server Error:
   ```json
   {
-  message: Internal Server Error
+  "message": "Internal Server Error"
   }
   ```
 ```POST /api/v1/users```: Create a new user.
  - response 201 Created:
   ```json
 {
-id: 2,
-name:"Michael Scott",
-type: "admin",
-email: "dunder@gmail.com",
-nation: blueArmy}
+"id": 3,
+"name":"Jim",
+"type": "user",
+"email": "dunder2@gmail.com",
+"nation": "blackArmy"
+}
 ```
  - response 401 Unauthorized:
   ```json
 {
-message: Authorization Required
+"message": "Authorization Required"
 }
 ```
 - response 400 Bad Request:
   ```json
   {
-  message: Invalid data
+  "message": "Invalid data"
   }
   ```
 - response 500 Internal Server Error:
   ```json
   {
-  message: Internal Server Error
+  "message": "Internal Server Error"
   }
   ```
 
@@ -154,34 +156,35 @@ message: Authorization Required
  - response 200 OK:
   ```json
 {
-id: 2,
-name:"UpdatedName",
-type: "admin",
-email: "dunder@gmail.com",
-nation: blueArmy}
+"id": 2,
+"name":"UpdatedName",
+"type": "admin",
+"email": "dunder@gmail.com",
+"nation": "blueArmy"
+}
 ```
  - response 401 Unauthorized:
   ```json
 {
-message: Authorization Required
+"message": "Authorization Required"
 }
 ```
 - response 400 Bad Request:
   ```json
   {
-  message: Invalid data
+  "message": "Invalid data"
   }
   ```
   - response 404 Not Found:
   ```json
   {
-  message: user with that id not found
+  "message": "user with that id not found"
   }
   ```
 - response 500 Internal Server Error:
   ```json
   {
-  message: Internal Server Error
+  "message": "Internal Server Error"
   }
   ```
 
@@ -192,19 +195,19 @@ message: Authorization Required
  - response 401 Unauthorized:
   ```json
 {
-message: Authorization Required
+"message": "Authorization Required"
 }
 ```
   - response 404 Not Found:
   ```json
   {
-  message: user with that id not found
+  "message": "user with that id not found"
   }
   ```
 - response 500 Internal Server Error:
   ```json
   {
-  message: Internal Server Error
+  "message": "Internal Server Error"
   }
   ```
 
