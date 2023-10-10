@@ -14,7 +14,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Squads](#squads)
   - [Tanks](#tanks)
   - [Planes](#planes)
-  - [Diagram for Database](#diagramDB)
+- [Diagram for Database](#diagramDB)
 
 ## Features
 
