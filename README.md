@@ -14,6 +14,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Squads](#squads)
   - [Tanks](#tanks)
   - [Planes](#planes)
+  - [Diagram for Database](#diagramDB)
 
 ## Features
 
@@ -1222,6 +1223,9 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 For more details on how to use these endpoints, refer to the API documentation provided in the project.
 
+
+### DiagramDB
+(use dbdiagram.io):
 ```
 // Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
