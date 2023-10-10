@@ -36,12 +36,13 @@ Before you start, make sure you have the following prerequisites installed:
 
 1. Clone the repository:
 
-   ```sh
-   git clone https://github.com/evakv0th/war-simulator.git
+```sh
+git clone https://github.com/evakv0th/war-simulator.git
+```
 
 2. Install dependencies:
 
- ```sh
+```sh
 cd war-simulator
 npm install
 ```
@@ -197,9 +198,9 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 | Parameter    | Type     | Description                   |
 | ------------ | ------   | -------------------           |
-| `name`       | string   | Name of the user (required)   |
-| `type`       | string   | admin or user (required)      |
-| `email`      | string   | User's email (required)       |
+| `name`       | string   | Name of the user (optional)   |
+| `type`       | string   | admin or user (optional)      |
+| `email`      | string   | User's email (optional)       |
 
  - response 200 OK:
 ```json
@@ -398,7 +399,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | Parameter    | Type     | Description                                      |
 | ------------ | ------   | --------------------------------------           |
 | `name`       | string   | Name of the army (required)                      |
-| `advantage`  | string   | Another optional boolean parameter. (required)   |
+| `advantage`  | string   | Advantage of an army (required)                  |
 
  - response 201 Created:
   ```json
@@ -430,6 +431,37 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 ```POST /api/v1/armies/battles``` : Assign a battle with another army
+### Request Body
+
+| Parameter      | Type     | Description                                      |
+| ------------   | ------   | --------------------------------------           |
+| `yourArmyId`   | string   | id of your army (required)                       |
+| `enemyArmyId`  | string   | id of enemy army (required)                      |
+
+- response 200 OK:
+```json
+{
+"message": "Total strength of your units are 50 from squads, 50 from tanks and 50 from planes. With air advantage your total strength is 175. Enemy strength - 200, you lost."
+}
+```
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad request:
+```json
+{
+"message": "Invalid data. In body you should attack id of your army and id of enemy army."
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 ```PATCH /api/v1/armies/:id```: Partially update an army's information.
 
@@ -439,11 +471,18 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | ------------ | ------ | -------------                             |
 | `id`         | string | Army Id (required)                        |
 
+### Request Body
+
+| Parameter      | Type     | Description                                      |
+| ------------   | ------   | --------------------------------------           |
+| `name`         | string   | name of the army (optional)                      |
+| `advantage`    | string   | advantage of the army(optional)                  |
+
  - response 200 OK:
   ```json
 {
 "id": 2,
-"name": "blackArmy",
+"name": "newName",
 "troops": ["squad3"],
 "tech": ["plane1", "plane2"],
 "advantage": "air"
@@ -505,19 +544,281 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 ```PATCH /api/v1/armies/:id/troops/:squadId```: Add squad to Army.
+### Query Parameters
 
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `armyId`     | string | Army Id (required)                        |
+| `squadId`    | string | Squad Id (required)                       |
+ 
+ - response 200 OK:
+  ```json
+{
+"id": 2,
+"name": "blackArmy",
+"troops": ["newSquad"],
+"tech": [],
+"advantage": "air"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army or squad with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```PATCH /api/v1/armies/:id/tech/:techId```: Add tech to Army.
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `armyId`     | string | Army Id (required)                        |
+| `techId`     | string | tech Id (required)                        |
+ 
+ - response 200 OK:
+  ```json
+{
+"id": 2,
+"name": "blackArmy",
+"troops": [],
+"tech": ["newTank"],
+"advantage": "air"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army or tech with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 ## Squads:
 
 ```GET /api/v1/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
+ - response 200 OK:
+     ```json
+    [
+      {
+        "id": 1,
+        "name": "squadDelta",
+        "strength": 150,
+        "nation": "blackArmy"
+      },
+      {
+        "id": 2,
+        "name": "squadAlpha",
+        "strength": 200,
+        "nation": "blueArmy"
+      },
+    ]
+    ```
+ - response 401 Unauthorized:
+   ```json
+    {
+      "message": "Authorization Required"
+    }
+    ```
+- response 500 Internal Server Error:
+  ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
 
 ```GET /api/v1/squads/:id```: Get a single squad by ID.
 
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | squad Id (required)                       |
+
+ - response 200 OK:
+  ```json
+{
+ "id": 1,
+"name": "squadDelta",
+"strength": 150,
+"nation": "blackArmy"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "squad with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 ```POST /api/v1/squads```: Create a new squad.
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the squad (required)                     |
+| `strength`   | number   | Strength of the squad (required)                 |
+
+ - response 201 Created:
+  ```json
+{
+ "id": 1,
+"name": "squadDelta",
+"strength": 150,
+"nation": ""
+}
+```
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 
 ```PATCH /api/v1/squads/:id```: Partially update a squad's information.
 
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | Squad Id (required)                       |
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the squad (optional)                     |
+| `strength`   | number   | Strength of the squad (optional)                 |
+
+ - response 200 OK:
+  ```json
+{
+ "id": 1,
+"name": "updatedName",
+"strength": 150,
+"nation": "blackArmy"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+
 ```DELETE /api/v1/squads/:id```: Delete a squad.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | squad Id (required)                       |
+
+ - response 204 No Content:
+  ```json{}```
+
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "squad with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 
 ## Tech:
 
