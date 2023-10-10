@@ -66,11 +66,43 @@ User Endpoints:
 
 ## Users:
 ```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
-  - response 200:
-  ```[{ id: 2, name: "Michael Scott", type: "admin", email: "dunder@gmail.com", nation: blueArmy}, ...]```
+  - response 200 OK:
+     ```json
+    [
+      {
+        "id": 2,
+        "name": "Michael Scott",
+        "type": "admin",
+        "email": "dunder@gmail.com",
+        "nation": "blueArmy"
+      },
+      // ...
+    ]
+    ```
+ - response 401 Unauthorized:
+   ```json
+    {
+      "message": "Authorization Required"
+    }
+    ```
+- response 500 Internal Server Error:
+  ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
 
+To retrieve a list of users sorted by name, you can make a GET request to the `/api/v1/users` endpoint. If you want to sort the results by name, include the `name` query parameter in the request, e.g., `/api/v1/users?name=Mic`.
+  
 ```GET /api/v1/users/:id```: Get a single user by ID.
-
+ - response 200 OK:
+  ```{ id: 2, name: "Michael Scott", type: "admin", email: "dunder@gmail.com", nation: blueArmy}```
+ - response 401 Unauthorized:
+  ```{message: Authorization Required}```
+- response 404 Not Found:
+  ```{message: user with that id not found}```
+- response 500 Internal Server Error:
+  ```{message: Internal Server Error}```
 ```POST /api/v1/users```: Create a new user.
 
 ```PUT /api/v1/users/:id```: Update a user's information.
