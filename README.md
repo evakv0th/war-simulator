@@ -65,11 +65,13 @@ Here are some of the available API endpoints:
 User Endpoints:
 
 ## Users:
-###```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
+```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
+  - response 200:
+  ```[{ id: 2, name: "Michael Scott", type: "admin", email: "dunder@gmail.com", nation: blueArmy}, ...]```
 
-###```GET /api/v1/users/:id```: Get a single user by ID.
+```GET /api/v1/users/:id```: Get a single user by ID.
 
-###```POST /api/v1/users```: Create a new user.
+```POST /api/v1/users```: Create a new user.
 
 ```PUT /api/v1/users/:id```: Update a user's information.
 
