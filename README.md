@@ -382,7 +382,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -426,7 +426,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 201 Created:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -506,7 +506,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -582,7 +582,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -628,7 +628,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -674,7 +674,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "blueArmy",
         "advantage": "patriotic",
@@ -712,21 +712,21 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Squads:
 
-```GET /api/v1/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
+```GET /api/v1/squads```: Get a list of squads.
  - response 200 OK:
      ```json
     [
       {
         "id": 1,
         "name": "squadDelta",
-        "type": sabotage,
+        "type": "sabotage",
         "armyId": 1,
         "weapons": ["weapon1"]
       },
       {
         "id": 2,
         "name": "squadBeta",
-        "type": combat,
+        "type": "combat",
         "armyId": 2,
         "weapons": ["weapon1", "weapon2"]
       },
@@ -755,10 +755,10 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "squadDelta",
-        "type": sabotage,
+        "type": "sabotage",
         "armyId": 1,
         "weapons": ["weapon1"]
       }
@@ -793,10 +793,10 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 201 Created:
   ```json
-{
+      {
         "id": 1,
         "name": "squadDelta",
-        "type": sabotage,
+        "type": "sabotage",
         "armyId": null,
         "weapons": []
       }
@@ -838,10 +838,10 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "newNameSquad",
-        "type": sabotage,
+        "type": "sabotage",
         "armyId": 1,
         "weapons": ["weapon1"]
       }
@@ -916,10 +916,10 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "newNameSquad",
-        "type": sabotage,
+        "type": "sabotage",
         "armyId": 1,
         "weapons": ["newWeapon"]
       }
@@ -951,6 +951,196 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 ## Weapons:
+
+```GET /api/v1/weapons```: Get a list of weapons.
+ - response 200 OK:
+     ```json
+    [
+      {
+        "id": 1,
+        "name": "Ak-47",
+        "strength": 200,
+        "bulletReq": 100
+      },
+       {
+        "id": 2,
+        "name": "Sniper Rifles",
+        "strength": 300,
+        "bulletReq": 150
+      },
+    ]
+    ```
+ - response 401 Unauthorized:
+   ```json
+    {
+      "message": "Authorization Required"
+    }
+    ```
+- response 500 Internal Server Error:
+  ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
+
+```GET /api/v1/weapons/:id```: Get a single weapon by ID.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | weapon Id (required)                      |
+
+ - response 200 OK:
+  ```json
+      {
+        "id": 2,
+        "name": "Sniper Rifles",
+        "strength": 300,
+        "bulletReq": 150
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "weapon with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```POST /api/v1/weapons```: Create a new weapon.
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the weapon (required)                    |
+| `strength`   | number   | strength of the weapon (required)                |
+| `bulletReq`  | number   | Bullets requirement of the weapon (required)     |
+
+ - response 201 Created:
+  ```json
+      {
+        "id": 2,
+        "name": "Sniper Rifles",
+        "strength": 300,
+        "bulletReq": 150
+      }
+```
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+
+```PATCH /api/v1/weapons/:id```: Partially update a weapon's information.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | weapon Id (required)                      |
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the weapon (optional)                    |
+| `strength`   | number   | strength of the weapon (optional)                |
+| `bulletReq`  | number   | Bullets requirement of the weapon (optional)     |
+
+ - response 200 OK:
+  ```json
+      {
+        "id": 2,
+        "name": "Sniper Rifles",
+        "strength": 300,
+        "bulletReq": 150
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "weapon with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+
+```DELETE /api/v1/weapons/:id```: Delete a weapon.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | weapon Id (required)                      |
+
+ - response 204 No Content:
+  ```json
+{}
+```
+
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "weapon with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
 
 
 ## Tanks:
@@ -999,7 +1189,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
- {
+      {
         "id": 1,
         "name": "tank1",
         "strength": 600,
@@ -1039,7 +1229,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  
  - response 201 Created:
   ```json
-{
+      {
         "id": 1,
         "name": "tank1",
         "strength": 600,
@@ -1085,7 +1275,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+      {
         "id": 1,
         "name": "updatedTank",
         "strength": 600,
@@ -1199,7 +1389,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
- {
+     {
         "id": 1,
         "name": "plane1",
         "airfieldStrength": 600,
@@ -1289,7 +1479,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
  - response 200 OK:
   ```json
-{
+    {
         "id": 1,
         "name": "plane1",
         "airfieldStrength": 600,
@@ -1411,7 +1601,6 @@ Table weapons {
   id integer [primary key]
   name varchar
   strength integer
-  squad squads
   bulletsReq integer
 }
 
