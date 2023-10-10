@@ -96,8 +96,26 @@ Here are some of the available API endpoints:
     ```
 
 To retrieve a list of users sorted by name, you can make a GET request to the `/api/v1/users` endpoint. If you want to sort the results by name, include the `name` query parameter in the request, e.g., `/api/v1/users?name=Mic`.
+
+```/api/v1/users?name=Mic```: Get all users with name starts with Mic
+- response 200 OK:
+```json
+[{
+"id": 2,
+"name":"Michael Scott",
+"type": "admin",
+"email": "dunder@gmail.com",
+"nation": "blueArmy"
+}]
+```
   
 ```GET /api/v1/users/:id```: Get a single user by ID.
+### Query Parameters
+
+| Parameter    | Type   | Description                    |
+| ------------ | ------ | -------------                  |
+| `id`         | string | User Id (required)             |
+
  - response 200 OK:
   ```json
 {
@@ -126,15 +144,25 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 "message": "Internal Server Error"
 }
 ```
-```POST /api/v1/users```: Create a new user.
- - response 201 Created:
-  ```json
+```POST /api/v1/users```: Create a new user (id will be created automatically).
+ 
+
+ - ### Request Body
+
+| Parameter    | Type     | Description                   |
+| ------------ | ------   | -------------------           |
+| `name`       | string   | Name of the user (required)   |
+| `type`       | string   | admin or user  (required)     |
+| `email`      | string   | User's email  (required)      |
+  
+- response 201 Created:
+```json
 {
 "id": 3,
 "name":"Jim",
 "type": "user",
 "email": "dunder2@gmail.com",
-"nation": "blackArmy"
+"nation": ""
 }
 ```
  - response 401 Unauthorized:
@@ -158,6 +186,20 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 
 ```PATCH /api/v1/users/:id```: Partially update a user's information.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                    |
+| ------------ | ------ | -------------                  |
+| `id`         | string | User Id (required)             |
+
+ - ### Request Body
+
+| Parameter    | Type     | Description                   |
+| ------------ | ------   | -------------------           |
+| `name`       | string   | Name of the user (required)   |
+| `type`       | string   | admin or user (required)      |
+| `email`      | string   | User's email (required)       |
 
  - response 200 OK:
 ```json
@@ -194,7 +236,55 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
+```PATCH /api/v1/users/:id/army/:armyId```: Add army to user.
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | User Id (required)                        |
+| `armyId`     | string | Army Id which is added to user (required) |
+
+ - response 200 OK:
+```json
+{
+"id": 2,
+"name":"UpdatedName",
+"type": "admin",
+"email": "dunder@gmail.com",
+"nation": "addedArmy"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "user or army with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+
 ```DELETE /api/v1/users/:id```: Delete a user.
+
+| Parameter    | Type   | Description                    |
+| ------------ | ------ | -------------                  |
+| `id`         | string | User Id (required)             |
 
  - response 204 No Content:
   ```json{}```
@@ -219,18 +309,6 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Armies:
 
-```GET /api/v1/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
-
-```GET /api/v1/armies/:id```: Get a single army by ID.
-
-```POST /api/v1/armies```: Create a new army.
-
-```POST /api/v1/armies/battles/:armyId``` : Assign a battle with another army
-
-```PATCH /api/v1/armies/:id```: Partially update an army's information.
-
-```DELETE /api/v1/armies/:id```: Delete an army.
-
 ### Advantages in army:
 
 -**air** - each aircraft will have 1.5x strength
@@ -240,6 +318,194 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 -**minefield** - at the start of the battle each enemy unit (except for planes) will have strength reduction. (tanks will have 0.7x strength, troops 0.9x strength)
 
 -**patriotic** - more men - more strength. Each squad will multiply strength of all squads by 0,05 (max bonus - 2x strength)
+
+
+```GET /api/v1/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
+ - response 200 OK:
+     ```json
+    [
+      {
+        "id": 1,
+        "name": "blueArmy",
+        "troops": ["squad1", "squad2"],
+        "tech": ["plane1", "tank2"],
+        "advantage": "patriotic"
+      },
+     {
+        "id": 2,
+        "name": "blackArmy",
+        "troops": ["squad3"],
+        "tech": ["plane1", "plane2"],
+        "advantage": "air"
+      },
+    ]
+    ```
+ - response 401 Unauthorized:
+   ```json
+    {
+      "message": "Authorization Required"
+    }
+    ```
+- response 500 Internal Server Error:
+  ```json
+    {
+      "message": "Internal Server Error"
+    }
+    ```
+
+
+```GET /api/v1/armies/:id```: Get a single army by ID.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | Army Id (required)                        |
+
+ - response 200 OK:
+  ```json
+{
+"id": 2,
+"name": "blackArmy",
+"troops": ["squad3"],
+"tech": ["plane1", "plane2"],
+"advantage": "air"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "army with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```POST /api/v1/armies```: Create a new army (id will be created automatically).
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the army (required)                      |
+| `advantage`  | string   | Another optional boolean parameter. (required)   |
+
+ - response 201 Created:
+  ```json
+{
+"id": 2,
+"name": "blackArmy",
+"troops": [],
+"tech": [],
+"advantage": "air"
+}
+```
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```POST /api/v1/armies/battles``` : Assign a battle with another army
+
+```PATCH /api/v1/armies/:id```: Partially update an army's information.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | Army Id (required)                        |
+
+ - response 200 OK:
+  ```json
+{
+"id": 2,
+"name": "blackArmy",
+"troops": ["squad3"],
+"tech": ["plane1", "plane2"],
+"advantage": "air"
+}
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```DELETE /api/v1/armies/:id```: Delete an army.
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `armyId`     | string | Army Id (required)                        |
+
+ - response 204 No Content:
+```json{}```
+
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```PATCH /api/v1/armies/:id/troops/:squadId```: Add squad to Army.
+
 
 ## Squads:
 
