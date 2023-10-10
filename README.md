@@ -27,7 +27,6 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - Add planes and tanks to your armies. Both have fuel requirements, so you cant spam heavy tech.
 - Weapons have requirements for bullets.
 - Engage in battles between armies with various advantages and strengths.
-- User authentication with role-based access control (normal user or admin).
 
 ## Getting Started
 
