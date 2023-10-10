@@ -19,7 +19,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 
 - Create and manage armies with different strengths and advantages.
 - Organize squads within armies.
-- Add technologies (planes and tanks) to your armies.
+- Add planes and tanks to your armies.
 - Engage in battles between armies with various advantages and strengths.
 - User authentication with role-based access control (normal user or admin).
 
@@ -65,31 +65,33 @@ Here are some of the available API endpoints:
 User Endpoints:
 
 ## Users:
-```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
+###```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
 
-```GET /api/users/:id```: Get a single user by ID.
+###```GET /api/v1/users/:id```: Get a single user by ID.
 
-```POST /api/users```: Create a new user.
+###```POST /api/v1/users```: Create a new user.
 
-```PUT /api/users/:id```: Update a user's information.
+```PUT /api/v1/users/:id```: Update a user's information.
 
-```PATCH /api/users/:id```: Partially update a user's information.
+```PATCH /api/v1/users/:id```: Partially update a user's information.
 
-```DELETE /api/users/:id```: Delete a user.
+```DELETE /api/v1/users/:id```: Delete a user.
 
 ## Armies:
 
-```GET /api/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
+```GET /api/v1/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
 
-```GET /api/armies/:id```: Get a single army by ID.
+```GET /api/v1/armies/:id```: Get a single army by ID.
 
-```POST /api/armies```: Create a new army.
+```POST /api/v1/armies```: Create a new army.
 
-```PUT /api/armies/:id```: Update an army's information.
+```POST /api/v1/armies/battles/:armyId``` : Assign a battle with another army
 
-```PATCH /api/armies/:id```: Partially update an army's information.
+```PUT /api/v1/armies/:id```: Update an army's information.
 
-```DELETE /api/armies/:id```: Delete an army.
+```PATCH /api/v1/armies/:id```: Partially update an army's information.
+
+```DELETE /api/v1/armies/:id```: Delete an army.
 
 ### Advantages in army:
 
@@ -103,35 +105,31 @@ User Endpoints:
 
 ## Squads:
 
-```GET /api/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
+```GET /api/v1/squads```: Get a list of squads. (id, name:string, strength:number, nation: army)
 
-```GET /api/squads/:id```: Get a single squad by ID.
+```GET /api/v1/squads/:id```: Get a single squad by ID.
 
-```POST /api/squads```: Create a new squad.
+```POST /api/v1/squads```: Create a new squad.
 
-```PUT /api/squads/:id```: Update a squad's information.
+```PUT /api/v1/squads/:id```: Update a squad's information.
 
-```PATCH /api/squads/:id```: Partially update a squad's information.
+```PATCH /api/v1/squads/:id```: Partially update a squad's information.
 
-```DELETE /api/squads/:id```: Delete a squad.
+```DELETE /api/v1/squads/:id```: Delete a squad.
 
 ## Tech:
 
-```GET /api/tech```: Get a list of technologies. (id, name:string, strength:number, nation: army, type: plane |  tank)
+```GET /api/v1/tech```: Get a list of technologies. (id, name:string, strength:number, nation: army, type: plane |  tank)
 
-```GET /api/tech/:id```: Get a single technology by ID.
+```GET /api/v1/tech/:id```: Get a single technology by ID.
 
-```POST /api/tech```: Create a new technology.
+```POST /api/v1/tech```: Create a new technology.
 
-```PUT /api/tech/:id```: Update a technology's information.
+```PUT /api/v1/tech/:id```: Update a technology's information.
 
-```PATCH /api/tech/:id```: Partially update a technology's information.
+```PATCH /api/v1/tech/:id```: Partially update a technology's information.
 
-```DELETE /api/tech/:id```: Delete a technology.
-
-## Battles:
-
-```POST /api/battles```: Start a battle between armies. (id, sideOne[army...], sideTwo:[army...])
+```DELETE /api/v1/tech/:id```: Delete a technology.
 
 
 For more details on how to use these endpoints, refer to the API documentation provided in the project.
