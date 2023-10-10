@@ -288,7 +288,9 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | `id`         | string | User Id (required)             |
 
  - response 204 No Content:
-  ```json{}```
+  ```json
+{}
+```
  - response 401 Unauthorized:
   ```json
 {
@@ -522,7 +524,9 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | `armyId`     | string | Army Id (required)                        |
 
  - response 204 No Content:
-```json{}```
+```json
+{}
+```
 
  - response 401 Unauthorized:
   ```json
@@ -771,7 +775,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
   - response 404 Not Found:
 ```json
 {
-"message": "army with that id not found"
+"message": "squad with that id not found"
 }
 ```
 - response 400 Bad Request:
@@ -798,7 +802,9 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | `id`         | string | squad Id (required)                       |
 
  - response 204 No Content:
-  ```json{}```
+  ```json
+{}
+```
 
  - response 401 Unauthorized:
 ```json
@@ -824,13 +830,199 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ```GET /api/v1/tech```: Get a list of technologies. (id, name:string, strength:number, nation: army, type: plane |  tank)
 
+- response 200 OK:
+     ```json
+    [
+      {
+        "id": 1,
+        "name": "tank1",
+        "strength": 600,
+        "nation": "blackArmy",
+        "type": "tank",
+      },
+         {
+        "id": 2,
+        "name": "plane2",
+        "strength": 750,
+        "nation": "blueArmy",
+        "type": "plane",
+      },
+    ]
+    ```
+ - response 401 Unauthorized:
+   ```json
+    {
+      "message": "Authorization Required"
+    }
+    ```
+- response 500 Internal Server Error:
+  ```json
+    {
+      "message": "Internal Server Error"
+    }
+   ```
+
 ```GET /api/v1/tech/:id```: Get a single technology by ID.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | tech Id (required)                        |
+
+ - response 200 OK:
+  ```json
+ {
+        "id": 1,
+        "name": "tank1",
+        "strength": 600,
+        "nation": "blackArmy",
+        "type": "tank",
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "tech with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 
 ```POST /api/v1/tech```: Create a new technology.
 
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the tech (required)                      |
+| `strength`   | number   | Strength of the tech (required)                  |
+| `type`       | number   | plane or tank (required)                         |
+ 
+ - response 201 Created:
+  ```json
+{
+        "id": 3,
+        "name": "tank2",
+        "strength": 600,
+        "nation": "",
+        "type": "tank",
+      }
+```
+ - response 401 Unauthorized:
+  ```json
+{
+"message": "Authorization Required"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+
 ```PATCH /api/v1/tech/:id```: Partially update a technology's information.
 
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | tech Id (required )                       |
+
+### Request Body
+
+| Parameter    | Type     | Description                                      |
+| ------------ | ------   | --------------------------------------           |
+| `name`       | string   | Name of the tech (optional)                      |
+| `strength`   | number   | Strength of the tech (optional)                  |
+
+ - response 200 OK:
+  ```json
+{
+        "id": 3,
+        "name": "tank700",
+        "strength": 700,
+        "nation": "",
+        "type": "tank",
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "tech with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 ```DELETE /api/v1/tech/:id```: Delete a technology.
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | tech Id (required)                        |
+
+ - response 204 No Content:
+  ```json
+{}
+```
+
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+- response 404 Not Found:
+```json
+{
+"message": "squad with that id not found"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 
 
 For more details on how to use these endpoints, refer to the API documentation provided in the project.
