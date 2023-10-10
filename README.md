@@ -12,6 +12,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Users](#users)
   - [Armies](#armies)
   - [Squads](#squads)
+  - [Weapons](#weapons)
   - [Tanks](#tanks)
   - [Planes](#planes)
 - [Diagram for Database](#diagramDB)
@@ -19,8 +20,12 @@ Battle of armies! In this war simulator project, you can create and manage armie
 ## Features
 
 - Create and manage armies with different strengths and advantages.
-- Organize squads within armies.
-- Add planes and tanks to your armies.
+- Each user have an army, army can have military units, ammount of fuel and ammount of bullets.
+- Each army can have single advantage: air, heavyTech, patriotic and minefield.
+- Organize squads within armies, squads can have 2 types: sabotage and combat.
+- Squads can have multiple weapons, squad without weapons cannot participate in battle.
+- Add planes and tanks to your armies. Both have fuel requirements, so you cant spam heavy tech.
+- Weapons have requirements for bullets.
 - Engage in battles between armies with various advantages and strengths.
 - User authentication with role-based access control (normal user or admin).
 
@@ -65,7 +70,7 @@ Once the server is running, you can access the API using the specified endpoints
 Here are some of the available API endpoints:
 
 ## Users:
-```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
+```GET /api/v1/users```: 
   - response 200 OK:
      ```json
     [
@@ -325,23 +330,31 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 -**patriotic** - more men - more strength. Each squad will multiply strength of all squads by 0,05 (max bonus - 2x strength)
 
 
-```GET /api/v1/armies```: Get a list of armies. (id, name:string, troops: [squads...], tech: [tech...], advantage: air | heavyTech | minefield | patriotic)
+```GET /api/v1/armies```: Get a list of armies. (and all of their tech and people)
  - response 200 OK:
      ```json
     [
       {
         "id": 1,
         "name": "blueArmy",
-        "troops": ["squad1", "squad2"],
-        "tech": ["plane1", "tank2"],
-        "advantage": "patriotic"
+        "advantage": "patriotic",
+        "userId": 1,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500,
+        "tanks": ["tank1", "tank2"],
+        "planes": ["plane1", "plane2"],
+        "squads": ["squad1", "squad2"]
       },
      {
         "id": 2,
         "name": "blackArmy",
-        "troops": ["squad3"],
-        "tech": ["plane1", "plane2"],
-        "advantage": "air"
+        "advantage": "air",
+        "userId": 2,
+        "fuelAmmount": 1300,
+        "bulletsAmmount": 100,
+        "tanks": ["tank1", "tank2"],
+        "planes": ["plane1", "plane2"],
+        "squads": ["squad1", "squad2"]
       },
     ]
     ```
@@ -359,7 +372,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     ```
 
 
-```GET /api/v1/armies/:id```: Get a single army by ID.
+```GET /api/v1/armies/:id```: Get a single army by ID (and all of their tech and people).
 
 ### Query Parameters
 
@@ -370,12 +383,16 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  - response 200 OK:
   ```json
 {
-"id": 2,
-"name": "blackArmy",
-"troops": ["squad3"],
-"tech": ["plane1", "plane2"],
-"advantage": "air"
-}
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": 1,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500,
+        "tanks": ["tank1", "tank2"],
+        "planes": ["plane1", "plane2"],
+        "squads": ["squad1", "squad2"]
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -396,24 +413,27 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```POST /api/v1/armies```: Create a new army (id will be created automatically).
+```POST /api/v1/armies```: Create a new army (id will be created automatically and user_id will be **null** for now).
 
 ### Request Body
 
-| Parameter    | Type     | Description                                      |
-| ------------ | ------   | --------------------------------------           |
-| `name`       | string   | Name of the army (required)                      |
-| `advantage`  | string   | Advantage of an army (required)                  |
+| Parameter        | Type     | Description                                      |
+| ------------     | ------   | --------------------------------------           |
+| `name`           | string   | Name of the army (required)                      |
+| `advantage`      | string   | Advantage of an army (required)                  |
+| `fuelAmmount`    | number   | Fuel ammount (required)                          |
+| `bulletsAmmount` | number   | Bullets ammount (required)                       |
 
  - response 201 Created:
   ```json
 {
-"id": 2,
-"name": "blackArmy",
-"troops": [],
-"tech": [],
-"advantage": "air"
-}
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": null,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500
+      }
 ```
  - response 401 Unauthorized:
   ```json
@@ -457,7 +477,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 - response 400 Bad request:
 ```json
 {
-"message": "Invalid data. In body you should attack id of your army and id of enemy army."
+"message": "Invalid data. In body you should attach id of your army and id of enemy army."
 }
 ```
 - response 500 Internal Server Error:
@@ -477,20 +497,23 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ### Request Body
 
-| Parameter      | Type     | Description                                      |
-| ------------   | ------   | --------------------------------------           |
-| `name`         | string   | name of the army (optional)                      |
-| `advantage`    | string   | advantage of the army(optional)                  |
+| Parameter        | Type     | Description                                      |
+| ------------     | ------   | --------------------------------------           |
+| `name`           | string   | name of the army (optional)                      |
+| `advantage`      | string   | advantage of the army(optional)                  |
+| `fuelAmmount`    | number   | Fuel ammount (optional)                          |
+| `bulletsAmmount` | number   | Bullets ammount (optional)                       |
 
  - response 200 OK:
   ```json
 {
-"id": 2,
-"name": "newName",
-"troops": ["squad3"],
-"tech": ["plane1", "plane2"],
-"advantage": "air"
-}
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": 1,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -549,7 +572,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/armies/:id/troops/:squadId```: Add squad to Army.
+```PATCH /api/v1/armies/:id/squads/:squadId```: Add squad to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -560,12 +583,14 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  - response 200 OK:
   ```json
 {
-"id": 2,
-"name": "blackArmy",
-"troops": ["newSquad"],
-"tech": [],
-"advantage": "air"
-}
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": null,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500,
+        "squads": ["newSquad"]
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -593,23 +618,25 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/armies/:id/tech/:techId```: Add tech to Army.
+```PATCH /api/v1/armies/:id/tanks/:tankId```: Add tech to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
 | ------------ | ------ | -------------                             |
 | `armyId`     | string | Army Id (required)                        |
-| `techId`     | string | tech Id (required)                        |
+| `tankId`     | string | Tank Id (required)                        |
  
  - response 200 OK:
   ```json
 {
-"id": 2,
-"name": "blackArmy",
-"troops": [],
-"tech": ["newTank"],
-"advantage": "air"
-}
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": null,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500,
+        "tanks": ["newTanks"]
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -620,7 +647,53 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
   - response 404 Not Found:
 ```json
 {
-"message": "army or tech with that id not found"
+"message": "army or tank with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+```PATCH /api/v1/armies/:id/planes/:planeId```: Add tech to Army.
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `armyId`     | string | Army Id (required)                        |
+| `planeId`    | string | plane Id (required)                       |
+ 
+ - response 200 OK:
+  ```json
+{
+        "id": 1,
+        "name": "blueArmy",
+        "advantage": "patriotic",
+        "userId": null,
+        "fuelAmmount": 1000,
+        "bulletsAmmount": 500,
+        "planes": ["newPlane"]
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "army or plane with that id not found"
 }
 ```
 - response 400 Bad Request:
@@ -646,14 +719,16 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
       {
         "id": 1,
         "name": "squadDelta",
-        "strength": 150,
-        "nation": "blackArmy"
+        "type": sabotage,
+        "armyId": 1,
+        "weapons": ["weapon1"]
       },
       {
         "id": 2,
-        "name": "squadAlpha",
-        "strength": 200,
-        "nation": "blueArmy"
+        "name": "squadBeta",
+        "type": combat,
+        "armyId": 2,
+        "weapons": ["weapon1", "weapon2"]
       },
     ]
     ```
@@ -681,11 +756,12 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
  - response 200 OK:
   ```json
 {
- "id": 1,
-"name": "squadDelta",
-"strength": 150,
-"nation": "blackArmy"
-}
+        "id": 1,
+        "name": "squadDelta",
+        "type": sabotage,
+        "armyId": 1,
+        "weapons": ["weapon1"]
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -713,16 +789,17 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | Parameter    | Type     | Description                                      |
 | ------------ | ------   | --------------------------------------           |
 | `name`       | string   | Name of the squad (required)                     |
-| `strength`   | number   | Strength of the squad (required)                 |
+| `type`       | string   | Type of the squad (required)                     |
 
  - response 201 Created:
   ```json
 {
- "id": 1,
-"name": "squadDelta",
-"strength": 150,
-"nation": ""
-}
+        "id": 1,
+        "name": "squadDelta",
+        "type": sabotage,
+        "armyId": null,
+        "weapons": []
+      }
 ```
  - response 401 Unauthorized:
   ```json
@@ -757,16 +834,17 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 | Parameter    | Type     | Description                                      |
 | ------------ | ------   | --------------------------------------           |
 | `name`       | string   | Name of the squad (optional)                     |
-| `strength`   | number   | Strength of the squad (optional)                 |
+| `type`       | string   | Type of the squad (optional)                     |
 
  - response 200 OK:
   ```json
 {
- "id": 1,
-"name": "updatedName",
-"strength": 150,
-"nation": "blackArmy"
-}
+        "id": 1,
+        "name": "newNameSquad",
+        "type": sabotage,
+        "armyId": 1,
+        "weapons": ["weapon1"]
+      }
 ```
  - response 401 Unauthorized:
 ```json
@@ -827,6 +905,53 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
+```PATCH /api/v1/squads/:id/weapons/:weaponsId```: Add weapons to squads
+
+### Query Parameters
+
+| Parameter    | Type   | Description                               |
+| ------------ | ------ | -------------                             |
+| `id`         | string | Squad Id (required)                       |
+| `weaponsId`  | string | Weapon's Id (required)                    |
+
+ - response 200 OK:
+  ```json
+{
+        "id": 1,
+        "name": "newNameSquad",
+        "type": sabotage,
+        "armyId": 1,
+        "weapons": ["newWeapon"]
+      }
+```
+ - response 401 Unauthorized:
+```json
+{
+"message": "Authorization Required"
+}
+```
+  - response 404 Not Found:
+```json
+{
+"message": "squad or weapon with that id not found"
+}
+```
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
+## Weapons:
+
 
 ## Tanks:
 
@@ -840,12 +965,14 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "name": "tank1",
         "strength": 600,
         "fuelReq": 200,
+        "armyId": 1
       },
         {
         "id": 2,
         "name": "tank2",
         "strength": 340,
         "fuelReq": 100,
+        "armyId": 2
       },
     ]
     ```
@@ -877,6 +1004,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "name": "tank1",
         "strength": 600,
         "fuelReq": 200,
+        "armyId": 1
       }
 ```
  - response 401 Unauthorized:
@@ -916,6 +1044,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "name": "tank1",
         "strength": 600,
         "fuelReq": 200,
+        "armyId": null
       }
 ```
  - response 401 Unauthorized:
@@ -961,6 +1090,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "name": "updatedTank",
         "strength": 600,
         "fuelReq": 250,
+        "armyId": 1
       }
 ```
  - response 401 Unauthorized:
@@ -1034,6 +1164,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "airfieldStrength": 600,
         "surfaceStrength": 100,
         "fuelReq": 200,
+        "armyId": 1
       },
        {
         "id": 2,
@@ -1041,6 +1172,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "airfieldStrength": 200,
         "surfaceStrength": 100,
         "fuelReq": 170,
+        "armyId": 1
       },
     ]
     ```
@@ -1073,6 +1205,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "airfieldStrength": 600,
         "surfaceStrength": 100,
         "fuelReq": 200,
+         "armyId": 1
       }
 ```
  - response 401 Unauthorized:
@@ -1114,6 +1247,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "airfieldStrength": 600,
         "surfaceStrength": 100,
         "fuelReq": 200,
+         "armyId": null
       }
 ```
  - response 401 Unauthorized:
@@ -1161,6 +1295,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
         "airfieldStrength": 600,
         "surfaceStrength": 100,
         "fuelReq": 200,
+        "armyId": 1
       }
 ```
  - response 401 Unauthorized:
