@@ -13,7 +13,6 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Armies](#armies)
   - [Squads](#squads)
   - [Tech](#tech)
-  - [Battles](#battles)
 
 ## Features
 
@@ -62,8 +61,6 @@ Once the server is running, you can access the API using the specified endpoints
 
 Here are some of the available API endpoints:
 
-User Endpoints:
-
 ## Users:
 ```GET /api/v1/users```: Get a list of users. (id, name:string, type: normal | admin, email: string, nation: army)
   - response 200 OK:
@@ -96,20 +93,120 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
   
 ```GET /api/v1/users/:id```: Get a single user by ID.
  - response 200 OK:
-  ```{ id: 2, name: "Michael Scott", type: "admin", email: "dunder@gmail.com", nation: blueArmy}```
+  ```json
+{
+id: 2,
+name:"Michael Scott",
+type: "admin",
+email: "dunder@gmail.com",
+nation: blueArmy}
+```
  - response 401 Unauthorized:
-  ```{message: Authorization Required}```
+  ```json
+{
+message: Authorization Required
+}
+```
 - response 404 Not Found:
-  ```{message: user with that id not found}```
+  ```json
+  {
+  message: user with that id not found
+  }
+  ```
 - response 500 Internal Server Error:
-  ```{message: Internal Server Error}```
+  ```json
+  {
+  message: Internal Server Error
+  }
+  ```
 ```POST /api/v1/users```: Create a new user.
+ - response 201 Created:
+  ```json
+{
+id: 2,
+name:"Michael Scott",
+type: "admin",
+email: "dunder@gmail.com",
+nation: blueArmy}
+```
+ - response 401 Unauthorized:
+  ```json
+{
+message: Authorization Required
+}
+```
+- response 400 Bad Request:
+  ```json
+  {
+  message: Invalid data
+  }
+  ```
+- response 500 Internal Server Error:
+  ```json
+  {
+  message: Internal Server Error
+  }
+  ```
 
-```PUT /api/v1/users/:id```: Update a user's information.
 
 ```PATCH /api/v1/users/:id```: Partially update a user's information.
 
+ - response 200 OK:
+  ```json
+{
+id: 2,
+name:"UpdatedName",
+type: "admin",
+email: "dunder@gmail.com",
+nation: blueArmy}
+```
+ - response 401 Unauthorized:
+  ```json
+{
+message: Authorization Required
+}
+```
+- response 400 Bad Request:
+  ```json
+  {
+  message: Invalid data
+  }
+  ```
+  - response 404 Not Found:
+  ```json
+  {
+  message: user with that id not found
+  }
+  ```
+- response 500 Internal Server Error:
+  ```json
+  {
+  message: Internal Server Error
+  }
+  ```
+
 ```DELETE /api/v1/users/:id```: Delete a user.
+
+ - response 204 No Content:
+  ```json{}```
+ - response 401 Unauthorized:
+  ```json
+{
+message: Authorization Required
+}
+```
+  - response 404 Not Found:
+  ```json
+  {
+  message: user with that id not found
+  }
+  ```
+- response 500 Internal Server Error:
+  ```json
+  {
+  message: Internal Server Error
+  }
+  ```
 
 ## Armies:
 
@@ -120,8 +217,6 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```POST /api/v1/armies```: Create a new army.
 
 ```POST /api/v1/armies/battles/:armyId``` : Assign a battle with another army
-
-```PUT /api/v1/armies/:id```: Update an army's information.
 
 ```PATCH /api/v1/armies/:id```: Partially update an army's information.
 
@@ -145,8 +240,6 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ```POST /api/v1/squads```: Create a new squad.
 
-```PUT /api/v1/squads/:id```: Update a squad's information.
-
 ```PATCH /api/v1/squads/:id```: Partially update a squad's information.
 
 ```DELETE /api/v1/squads/:id```: Delete a squad.
@@ -158,8 +251,6 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```GET /api/v1/tech/:id```: Get a single technology by ID.
 
 ```POST /api/v1/tech```: Create a new technology.
-
-```PUT /api/v1/tech/:id```: Update a technology's information.
 
 ```PATCH /api/v1/tech/:id```: Partially update a technology's information.
 
