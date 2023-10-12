@@ -1557,16 +1557,15 @@ For more details on how to use these endpoints, refer to the API documentation p
 Table users {
   id integer [primary key]
   name varchar
-  type varchar
+  type enum
   email varchar
-  nation armies
 }
 
 
 Table armies {
   id integer [primary key]
   name varchar
-  advantage varchar
+  advantage enum
   user_id integer
   fuelAmmount integer
   bulletsAmmount integer
@@ -1592,7 +1591,7 @@ Table planes {
 Table squads {
    id integer [primary key]
    name varchar
-   type varchar
+   type enum
    army_id integer
 }
 
@@ -1615,6 +1614,4 @@ Ref: squads.army_id > armies.id
 Ref: weapons.id < squadsWeapons.weaponId
 Ref: squads.id < squadsWeapons.squadId
 Ref: users.id - armies.user_id 
-
-
 ```
