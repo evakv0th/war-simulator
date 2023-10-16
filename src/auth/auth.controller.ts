@@ -40,10 +40,5 @@ export function register(req: ValidatedRequest<UserRequest>, res: Response) {
 }
 
 export function protectedRoute(req: AuthenticatedRequest, res: Response) {
-  const user = req.user;
-  if (user && user.type === "admin") {
-    res.send("Access Granted");
-  } else {
-    res.status(403).send("You are not an admin, you cannot do this");
-  }
+  res.send("Access Granted");
 }
