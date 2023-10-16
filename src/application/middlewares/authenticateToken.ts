@@ -1,8 +1,8 @@
-import express, { NextFunction, Request, Response } from "express";
-import crypto from "crypto";
+import { NextFunction, Request, Response } from "express";
 import { sKey } from "../../auth/auth.tokenGenerate";
 import { users } from "../../auth/auth.model";
 import { User } from "../../auth/types/auth.interfaces";
+import { sha256 } from "../../auth/auth.sha256";
 
 export interface AuthenticatedRequest extends Request {
   user?: User;
@@ -12,11 +12,10 @@ export function authenticateToken(req: AuthenticatedRequest, res: Response, next
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (token) {
       const [header, payload, signature] = token.split(".");
-      const expectedSignature = crypto
-        .createHmac("sha256", sKey)
-        .update(`${header}.${payload}`)
-        .digest("base64");
-  
+      const expectedSignature = sha256(header + payload + sKey);
+      console.log(expectedSignature)
+      console.log(signature)
+
       if (signature === expectedSignature) {
         const decodedPayload = JSON.parse(Buffer.from(payload, "base64").toString());
   

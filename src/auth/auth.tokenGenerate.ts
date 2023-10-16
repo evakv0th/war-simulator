@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
-import crypto from "crypto";
 import { User } from "./types/auth.interfaces";
+import { sha256 } from "./auth.sha256";
 
 dotenv.config();
 export const sKey: any = process.env.SECRET_KEY;
@@ -13,10 +13,10 @@ export function generateToken(user: User): string {
     JSON.stringify({ sub: user.id, username: user.username })
   ).toString("base64");
 
-  const signature = crypto
-    .createHmac("sha256", sKey)
-    .update(`${header}.${payload}`)
-    .digest("base64");
+  console.log(header);
+  console.log(payload);
+  const signatureManual = sha256(header + payload + sKey);
+  console.log(signatureManual);
 
-  return `${header}.${payload}.${signature}`;
+  return `${header}.${payload}.${signatureManual}`;
 }
