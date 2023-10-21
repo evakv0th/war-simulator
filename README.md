@@ -1551,7 +1551,7 @@ For more details on how to use these endpoints, refer to the API documentation p
 ### DiagramDB
 (use dbdiagram.io):
 ```
-// Use DBML to define your database structure
+/ Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
 
 Table users {
@@ -1559,6 +1559,8 @@ Table users {
   name varchar
   type enum
   email varchar
+  created_at timestamp
+  updated_at timestamp
 }
 
 
@@ -1569,6 +1571,8 @@ Table armies {
   user_id integer
   fuelAmmount integer
   bulletsAmmount integer
+  created_at timestamp
+  updated_at timestamp
 }
 
 Table tanks {
@@ -1577,6 +1581,8 @@ Table tanks {
    strength integer
    fuelReq integer
    army_id integer
+   created_at timestamp
+   updated_at timestamp
 }
 
 Table planes {
@@ -1586,6 +1592,8 @@ Table planes {
    surfaceStrength integer
    fuelReq integer
    army_id integer
+   created_at timestamp
+   updated_at timestamp
 }
 
 Table squads {
@@ -1593,6 +1601,8 @@ Table squads {
    name varchar
    type enum
    army_id integer
+   created_at timestamp
+   updated_at timestamp
 }
 
 Table weapons {
@@ -1600,12 +1610,16 @@ Table weapons {
   name varchar
   strength integer
   bulletsReq integer
+  created_at timestamp
+  updated_at timestamp
 }
 
 Table squadsWeapons {
   id integer
   squadId integer
   weaponId integer
+  created_at timestamp
+  updated_at timestamp
 }
 
 Ref: tanks.army_id > armies.id
