@@ -1,0 +1,14 @@
+version: "3"
+services: 
+  db:
+    image: postgres:11
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_USER: test
+      POSTGRES_DB: test
+    ports:
+    - "5432:5432"
+  app:
+    image: war-simulator
+    ports:
+      - 3000:3000
