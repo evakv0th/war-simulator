@@ -21,8 +21,9 @@ const createUsersQuery = `
         name VARCHAR(255),
         type user_type,
         email VARCHAR(255),
-        created_at TIMESTAMP,
-        updated_at TIMESTAMP
+        password VARCHAR(255),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
     );
 `;
 
@@ -31,11 +32,65 @@ const createArmiesQuery = `
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
         advantage army_advantage,
-        user_id INT REFERENCES users(id),
-        fuel_amount INTEGER,
-        bullets_amount INTEGER,
-        created_at TIMESTAMP,
-        updated_at TIMESTAMP
+        user_id INT UNIQUE REFERENCES users(id),
+        fuel_amount INTEGER CHECK (fuel_amount <= 1000),
+        bullets_amount INTEGER CHECK (bullets_amount <= 1000),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+`;
+
+const createTanksQuery = `
+    CREATE TABLE IF NOT EXISTS tanks (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        strength INTEGER CHECK (strength <= 300),
+        fuel_req INTEGER CHECK (fuel_req <= 400),
+        army_id INT REFERENCES armies(id),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+`;
+
+const createPlanesQuery = `
+    CREATE TABLE IF NOT EXISTS planes (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        air_strength INTEGER CHECK (air_strength <= 400),
+        surface_strength INTEGER CHECK (surface_strength <= 100),
+        fuel_req INTEGER CHECK (fuel_req <= 400),
+        army_id INT REFERENCES armies(id),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+
+`;
+const createSquadsQuery = `
+    CREATE TABLE IF NOT EXISTS squads (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        army_id INT REFERENCES armies(id),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+`;
+
+const createWeaponsQuery = `
+    CREATE TABLE IF NOT EXISTS weapons (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255),
+        strength INTEGER CHECK (strength <= 200),
+        bullets_req INTEGER CHECK (bullets_req <= 300),
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+    );
+`;
+
+const createSquadsWeaponsQuery = `
+    CREATE TABLE IF NOT EXISTS squads_weapons (
+        squad_id INT REFERENCES squads(id),
+        weapon_id INT REFERENCES weapons(id),
+        PRIMARY KEY (squad_id, weapon_id)
     );
 `;
 
@@ -81,12 +136,23 @@ const checkArmyEnumExistsQuery = `
       console.log("Table users is up");
       await client.query(createArmiesQuery);
       console.log("Table army is up");
+      await client.query(createTanksQuery);
+      console.log("Table tanks is up");
+      await client.query(createPlanesQuery);
+      console.log("Table planes is up");
+      await client.query(createSquadsQuery);
+      console.log("Table squads is up");
+      await client.query(createWeaponsQuery);
+      console.log("Table weapons is up");
+      await client.query(createSquadsWeaponsQuery);
+      console.log("Table squads_weapons is up");
     } finally {
       client.release();
     }
   } catch (err) {
     console.error("Error:", err);
-  } finally {
-    pool.end();
   }
 })();
+
+
+export default pool;

@@ -10,7 +10,7 @@ export const users: User[] = [
     id: getNextId(),
     username: "test",
     password: "test",
-    type: "normal",
+    type: "user",
     email: "gma@gmail.com"
   },
   {

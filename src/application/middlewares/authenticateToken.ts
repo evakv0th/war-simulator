@@ -3,6 +3,8 @@ import { sKey } from "../../auth/auth.tokenGenerate";
 import { users } from "../../auth/auth.model";
 import { User } from "../../auth/types/auth.interfaces";
 import { sha256 } from "../../auth/auth.sha256";
+import pool from "../../db";
+
 
 export interface AuthenticatedRequest extends Request {
   user?: User;
