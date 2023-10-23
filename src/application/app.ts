@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import authRouter from "../auth/auth.router";
+import userRouter from "../users/users.router";
 import bodyParser from 'body-parser';
 import { validatorURL } from "./middlewares/URLvalidator";
 import { exceptionsFilter } from "./middlewares/error-filter";
@@ -18,6 +19,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/users", userRouter);
 
 app.use(validatorURL);
 

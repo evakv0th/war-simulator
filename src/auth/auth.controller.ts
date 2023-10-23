@@ -1,6 +1,5 @@
 import { Response } from "express";
 import { generateToken } from "./auth.tokenGenerate";
-import { getNextId, users } from "./auth.model";
 import { User } from "./types/auth.interfaces";
 import { ValidatedRequest } from "express-joi-validation";
 import { UserRequest } from "./types/user-login-schema";
