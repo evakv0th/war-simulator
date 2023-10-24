@@ -1,4 +1,6 @@
 import { Pool } from "pg";
+import createDatabase from "./create-db";
+
 export const pool = new Pool({
   host: "db",
   port: 5432,
@@ -7,15 +9,16 @@ export const pool = new Pool({
   database: "test",
 });
 
-const createEnumUsersType = `
+createDatabase().then(() => {
+  const createEnumUsersType = `
     CREATE TYPE user_type AS ENUM ('admin', 'user');
 `;
 
-const createEnumArmyAdv = `
+  const createEnumArmyAdv = `
     CREATE TYPE army_advantage AS ENUM ('air', 'heavy_tech', 'minefield', 'patriotic');
 `;
 
-const createUsersQuery = `
+  const createUsersQuery = `
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -27,7 +30,7 @@ const createUsersQuery = `
     );
 `;
 
-const createArmiesQuery = `
+  const createArmiesQuery = `
     CREATE TABLE IF NOT EXISTS armies (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -40,7 +43,7 @@ const createArmiesQuery = `
     );
 `;
 
-const createTanksQuery = `
+  const createTanksQuery = `
     CREATE TABLE IF NOT EXISTS tanks (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -52,7 +55,7 @@ const createTanksQuery = `
     );
 `;
 
-const createPlanesQuery = `
+  const createPlanesQuery = `
     CREATE TABLE IF NOT EXISTS planes (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -65,7 +68,7 @@ const createPlanesQuery = `
     );
 
 `;
-const createSquadsQuery = `
+  const createSquadsQuery = `
     CREATE TABLE IF NOT EXISTS squads (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -75,7 +78,7 @@ const createSquadsQuery = `
     );
 `;
 
-const createWeaponsQuery = `
+  const createWeaponsQuery = `
     CREATE TABLE IF NOT EXISTS weapons (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255),
@@ -86,7 +89,7 @@ const createWeaponsQuery = `
     );
 `;
 
-const createSquadsWeaponsQuery = `
+  const createSquadsWeaponsQuery = `
     CREATE TABLE IF NOT EXISTS squads_weapons (
         squad_id INT REFERENCES squads(id),
         weapon_id INT REFERENCES weapons(id),
@@ -94,65 +97,63 @@ const createSquadsWeaponsQuery = `
     );
 `;
 
-const checkUserEnumExistsQuery = `
+  const checkUserEnumExistsQuery = `
     SELECT 1
     FROM pg_type
     WHERE typname = 'user_type' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');
 `;
 
-const checkArmyEnumExistsQuery = `
+  const checkArmyEnumExistsQuery = `
     SELECT 1
     FROM pg_type
     WHERE typname = 'army_advantage' AND typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public');
 `;
 
-
-(async () => {
-  try {
-    const client = await pool.connect();
-
+  (async () => {
     try {
-      const result = await client.query(checkUserEnumExistsQuery);
-      const enumExists = result.rows.length > 0;
+      const client = await pool.connect();
 
-      if (!enumExists) {
-        await client.query(createEnumUsersType);
-        console.log("ENUM created successfully");
-      } else {
-        console.log("ENUM already exists");
+      try {
+        const result = await client.query(checkUserEnumExistsQuery);
+        const enumExists = result.rows.length > 0;
+
+        if (!enumExists) {
+          await client.query(createEnumUsersType);
+          console.log("ENUM created successfully");
+        } else {
+          console.log("ENUM already exists");
+        }
+
+        const resultArmyEnum = await client.query(checkArmyEnumExistsQuery);
+        const armyEnumExists = resultArmyEnum.rows.length > 0;
+
+        if (!armyEnumExists) {
+          await client.query(createEnumArmyAdv);
+          console.log("ENUM army created successfully");
+        } else {
+          console.log("ENUM army already exists");
+        }
+
+        await client.query(createUsersQuery);
+        console.log("Table users is up");
+        await client.query(createArmiesQuery);
+        console.log("Table army is up");
+        await client.query(createTanksQuery);
+        console.log("Table tanks is up");
+        await client.query(createPlanesQuery);
+        console.log("Table planes is up");
+        await client.query(createSquadsQuery);
+        console.log("Table squads is up");
+        await client.query(createWeaponsQuery);
+        console.log("Table weapons is up");
+        await client.query(createSquadsWeaponsQuery);
+        console.log("Table squads_weapons is up");
+      } finally {
+        client.release();
       }
-
-      const resultArmyEnum = await client.query(checkArmyEnumExistsQuery);
-      const armyEnumExists = resultArmyEnum.rows.length > 0;
-     
-      if (!armyEnumExists) {
-        await client.query(createEnumArmyAdv);
-        console.log("ENUM army created successfully");
-      } else {
-        console.log("ENUM army already exists");
-      }
-
-      await client.query(createUsersQuery);
-      console.log("Table users is up");
-      await client.query(createArmiesQuery);
-      console.log("Table army is up");
-      await client.query(createTanksQuery);
-      console.log("Table tanks is up");
-      await client.query(createPlanesQuery);
-      console.log("Table planes is up");
-      await client.query(createSquadsQuery);
-      console.log("Table squads is up");
-      await client.query(createWeaponsQuery);
-      console.log("Table weapons is up");
-      await client.query(createSquadsWeaponsQuery);
-      console.log("Table squads_weapons is up");
-    } finally {
-      client.release();
+    } catch (err) {
+      console.error("Error:", err);
     }
-  } catch (err) {
-    console.error("Error:", err);
-  }
-})();
-
-
+  })();
+});
 export default pool;
