@@ -55,11 +55,15 @@ npm install
 
 3. Configure the application by creating a .env file and specifying environment variables such as database connection settings and JWT secret. 
 
-4. Start the server
+4. Start the build image with docker
 ```
-npm start
+docker build -t war-simulator .
 ```
+5. Start the app with
 
+```
+docker-compose up
+```
 ### Usage
 
 Once the server is running, you can access the API using the specified endpoints. For detailed API documentation, refer to the API Endpoints section below.
