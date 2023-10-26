@@ -9,6 +9,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
+  - [Auth](#auth)
   - [Users](#users)
   - [Armies](#armies)
   - [Squads](#squads)
@@ -71,6 +72,112 @@ Once the server is running, you can access the API using the specified endpoints
 # API Endpoints
 
 Here are some of the available API endpoints:
+## Auth:
+```POST /api/v1/auth/register```: 
+
+ - ### Request Body
+
+| Parameter    | Type     | Description                   |
+| ------------ | ------   | -------------------           |
+| `username`   | string   | Name of the user (required)   |
+| `password`   | string   | password       (required)     |
+| `email`      | string   | User's email  (required)      |
+
+- response 201 Created:
+```json
+{
+    "id": 4,
+    "name": "admin",
+    "type": "user",
+    "email": "admin@gmail.com",
+    "password": "test",
+    "created_at": "2023-10-26T14:14:22.379Z",
+    "updated_at": "2023-10-26T14:14:22.379Z"
+}
+```
+
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+```POST /api/v1/auth/login```: 
+ - ### Request Body
+
+| Parameter    | Type     | Description                   |
+| ------------ | ------   | -------------------           |
+| `username`   | string   | Name of the user (required)   |
+| `password`   | string   | password       (required)     |
+| `email`      | string   | User's email  (required)      |
+
+- response 200 OK:
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjN9.06dgh6b1a7c2dd9477f0d6700043966bba0cb7868d1e1cb977b8e1d66e5eae021e"
+}
+```
+
+- response 400 Bad Request:
+```json
+{
+"message": "Invalid data"
+}
+```
+
+ - response 401 Unauthorized:
+```json
+{
+"message": "Wrong username, password, or email"
+}
+```
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+```GET /api/v1/auth/protected```:
+- Headers:
+  - `Authorization: Bearer <Your_Auth_Token>`
+OR
+- `Authorization: <Your_Auth_Token>`
+
+**Description:** This endpoint is for testing admin or user rights. This route only for admins.
+- response 200 OK:
+If admin:
+```json
+{
+    "message": "Access granted"
+}
+```
+If not admin:
+```json
+{
+    "message": "You are not an admin, you cannot do this"
+}
+```
+
+ - response 401 Unauthorized:
+```json
+{
+"message": "Unauthorized"
+}
+```
+
+- response 500 Internal Server Error:
+```json
+{
+"message": "Internal Server Error"
+}
+```
+
 
 ## Users:
 ```GET /api/v1/users```: 
