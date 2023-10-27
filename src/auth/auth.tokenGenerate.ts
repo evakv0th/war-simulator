@@ -10,7 +10,7 @@ export function generateToken(user: User): string {
     JSON.stringify({ alg: "HS256", typ: "JWT" })
   ).toString("base64");
   const payload = Buffer.from(
-    JSON.stringify({ sub: user.id, username: user.username })
+    JSON.stringify({ sub: user.id, username: user.name })
   ).toString("base64");
 
   console.log(header);

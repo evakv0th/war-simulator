@@ -1,7 +1,9 @@
-import {ContainerTypes, ValidatedRequestSchema} from 'express-joi-validation';
-import { User } from './auth.interfaces';
-
+import { ContainerTypes, ValidatedRequestSchema } from "express-joi-validation";
+import { User } from "./auth.interfaces";
 
 export interface UserRequest extends ValidatedRequestSchema {
-    [ContainerTypes.Body]: Omit<User, 'id' & 'type'>;
+  [ContainerTypes.Body]: Omit<
+    User,
+    "id" & "type" & "created_at" & "updated_at"
+  >;
 }

@@ -7,14 +7,14 @@ import { AuthenticatedRequest } from "../application/middlewares/authenticateTok
 import pool from "../db";
 
 export async function login(req: ValidatedRequest<UserRequest>, res: Response) {
-  const { username, password, email } = req.body;
+  const { name, password, email } = req.body;
   try {
     const client = await pool.connect();
-    
+
     try {
       const query = {
         text: "SELECT * FROM users WHERE name = $1 AND password = $2 AND email = $3",
-        values: [username, password, email],
+        values: [name, password, email],
       };
 
       const result = await client.query(query);
@@ -35,16 +35,30 @@ export async function login(req: ValidatedRequest<UserRequest>, res: Response) {
   }
 }
 
-export async function register(req: ValidatedRequest<UserRequest>, res: Response) {
-  const { username, password, email } = req.body;
-  if (username && password && email) {
+export async function register(
+  req: ValidatedRequest<UserRequest>,
+  res: Response
+) {
+  const { name, password, email } = req.body;
+  if (name && password && email) {
     try {
       const client = await pool.connect();
-      
+
       try {
+        const checkUserQuery = {
+          text: "SELECT id FROM users WHERE name = $1 OR email = $2",
+          values: [name, email],
+        };
+  
+        const checkResult = await client.query(checkUserQuery);
+  
+        if (checkResult.rows.length > 0) {
+          return res.status(400).send("User with the same username or email already exists.");
+        }
+
         const query = {
           text: "INSERT INTO users (name, password, email, type) VALUES ($1, $2, $3, $4) RETURNING *",
-          values: [username, password, email, "user"],
+          values: [name, password, email, "user"],
         };
 
         const result = await client.query(query);
