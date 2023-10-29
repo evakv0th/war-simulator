@@ -18,6 +18,11 @@ userRouter.get(
   authenticateToken,
   controllerWrapper(usersController.getUserById)
 );
+userRouter.get(
+  "/battle/:enemyId",
+  authenticateToken,
+  controllerWrapper(usersController.battle)
+);
 userRouter.patch(
   "/:id",
   authenticateToken,
