@@ -38,6 +38,12 @@ tankRouter.patch(
   isAdmin,
   controllerWrapper(tanksController.assignTankToArmy)
 );
+tankRouter.patch(
+  "/:id/remove_army",
+  authenticateToken,
+  isAdmin,
+  controllerWrapper(tanksController.removeTankFromArmy)
+);
 tankRouter.delete(
   "/:id",
   authenticateToken,

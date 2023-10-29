@@ -163,6 +163,26 @@ export async function assignPlaneToArmy(
     if (!army) {
       throw new HttpException(HttpStatusCode.NOT_FOUND, "Army not found");
     }
+    const fuelAlreadyAtArmy = await client.query(
+      `SELECT SUM(fuel_req) as total_fuel_req
+      FROM (
+        SELECT fuel_req FROM tanks WHERE army_id = $1
+        UNION ALL
+        SELECT fuel_req FROM planes WHERE army_id = $1
+      ) as combined_fuel_req`,
+      [armyId]
+    );
+    const fuelAtArmy = fuelAlreadyAtArmy.rows[0].total_fuel_req;
+    console.log(fuelAtArmy);
+    const remainingFuelCapacity =
+      army.fuel_amount - plane.fuel_req - fuelAtArmy;
+
+    if (remainingFuelCapacity < 0) {
+      throw new HttpException(
+        HttpStatusCode.BAD_REQUEST,
+        `Not enough fuel capacity in the army to add the tank (fuel_amount=${army.fuel_amount}, fuel already in use by other tech=${fuelAtArmy}, tank fuel_req=${plane.fuel_req})`
+      );
+    }
 
     const assignQuery = {
       text: "UPDATE planes SET army_id = $1 WHERE id = $2 RETURNING *",
@@ -179,6 +199,32 @@ export async function assignPlaneToArmy(
         "Assigning plane to army failed"
       );
     }
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+
+export async function removePlaneFromArmy(id: string): Promise<Plane> {
+  const client = await pool.connect();
+
+  try {
+    let query = "SELECT * FROM planes WHERE id = $1";
+    const values = [id];
+    const plane = await client.query(query, values);
+    if (plane.rows.length <= 0) {
+      throw new HttpException(
+        HttpStatusCode.NOT_FOUND,
+        `plane with id:${id} not found`
+      );
+    }
+    let queryToRemove =
+      "UPDATE planes SET army_id = null WHERE id=$1 RETURNING *";
+    const result = await client.query(queryToRemove, values);
+    return result.rows[0];
   } catch (err) {
     console.error("Database Error:", err);
     throw err;

@@ -24,9 +24,8 @@ export async function getSquadById(id: string): Promise<Squad> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM squads WHERE id = $1";
-    const values = [];
-    values.push(id);
+    let query = `SELECT * FROM squads WHERE squads.id = $1;`;
+    const values = [id];
     const result = await client.query(query, values);
 
     if (result.rows.length <= 0) {
@@ -35,7 +34,21 @@ export async function getSquadById(id: string): Promise<Squad> {
         `squad with id:${id} not found`
       );
     }
-    return result.rows[0];
+    let queryWeapons = `SELECT weapons.name, weapons.strength, weapons.bullets_req
+    FROM weapons
+    JOIN squads_weapons ON weapons.id = squads_weapons.weapon_id
+    WHERE squads_weapons.squad_id = $1;`;
+    const weaponsResult = await client.query(queryWeapons, values);
+    const weapons = weaponsResult.rows;
+    const weaponsArray = weapons.map((weapon) => ({
+      name: weapon.name,
+      strength: weapon.strength,
+      bullets_req: weapon.bullets_req,
+    }));
+    const squad = result.rows[0];
+    squad.weapons = weaponsArray;
+
+    return squad;
   } catch (err) {
     console.error("Database Error:", err);
     throw err;
@@ -107,7 +120,6 @@ export async function updateSquad(
   const queryUpd = `UPDATE squads SET ${changes} WHERE id=$1 RETURNING *;`;
 
   try {
-
     const result = await client.query(queryUpd, values);
     if (result.rowCount == 0)
       throw new HttpException(HttpStatusCode.NOT_FOUND, "squad not found");
@@ -125,9 +137,12 @@ export async function deleteSquad(id: string): Promise<Squad> {
   const client = await pool.connect();
 
   try {
+    const deleteRelationsQuery =
+      "DELETE FROM squads_weapons WHERE squad_id = $1;";
+    const values = [id];
+    await client.query(deleteRelationsQuery, values);
+
     let query = "DELETE FROM squads WHERE id=$1;";
-    const values = [];
-    values.push(id);
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
@@ -154,6 +169,37 @@ export async function assignSquadToArmy(
       throw new HttpException(HttpStatusCode.NOT_FOUND, "Army not found");
     }
 
+    const queryWeapons = {
+      text: "SELECT weapons.bullets_req FROM squads_weapons JOIN weapons ON squads_weapons.weapon_id = weapons.id WHERE squads_weapons.squad_id = $1",
+      values: [squadId],
+    };
+
+    const weaponsResult = await client.query(queryWeapons);
+    const totalBulletsReq = weaponsResult.rows.reduce(
+      (total, weapon) => total + weapon.bullets_req,
+      0
+    );
+    console.log(totalBulletsReq);
+
+    const querySquadsInArmy = {
+      text: "SELECT squads_weapons.squad_id, weapons.bullets_req FROM squads_weapons JOIN weapons ON squads_weapons.weapon_id = weapons.id WHERE squads_weapons.squad_id IN (SELECT id FROM squads WHERE army_id = $1)",
+      values: [armyId],
+    };
+
+    const squadsInArmyResult = await client.query(querySquadsInArmy);
+    const totalBulletsReqInArmy = squadsInArmyResult.rows.reduce(
+      (total, row) => total + row.bullets_req,
+      0
+    );
+    console.log(totalBulletsReqInArmy);
+
+    if (army.bullets_amount - (totalBulletsReq + totalBulletsReqInArmy) < 0) {
+      throw new HttpException(
+        HttpStatusCode.BAD_REQUEST,
+        "Assigning squad would exceed bullets_amount limit"
+      );
+    }
+
     const assignQuery = {
       text: "UPDATE squads SET army_id = $1 WHERE id = $2 RETURNING *",
       values: [armyId, squadId],
@@ -169,6 +215,31 @@ export async function assignSquadToArmy(
         "Assigning squad to army failed"
       );
     }
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}
+
+export async function removeSquadFromArmy(id: string): Promise<Squad> {
+  const client = await pool.connect();
+
+  try {
+    let query = "SELECT * FROM squads WHERE id = $1";
+    const values = [id];
+    const squad = await client.query(query, values);
+    if (squad.rows.length <= 0) {
+      throw new HttpException(
+        HttpStatusCode.NOT_FOUND,
+        `squad with id:${id} not found`
+      );
+    }
+    let queryToRemove =
+      "UPDATE squads SET army_id = null WHERE id=$1 RETURNING *";
+    const result = await client.query(queryToRemove, values);
+    return result.rows[0];
   } catch (err) {
     console.error("Database Error:", err);
     throw err;

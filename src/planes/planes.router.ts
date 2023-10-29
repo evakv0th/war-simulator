@@ -38,6 +38,12 @@ planeRouter.patch(
   isAdmin,
   controllerWrapper(planesController.assignPlaneToArmy)
 );
+planeRouter.patch(
+  "/:id/remove_army",
+  authenticateToken,
+  isAdmin,
+  controllerWrapper(planesController.removePlaneFromArmy)
+);
 planeRouter.delete(
   "/:id",
   authenticateToken,

@@ -38,6 +38,12 @@ squadRouter.patch(
   isAdmin,
   controllerWrapper(squadsController.assignSquadToArmy)
 );
+squadRouter.patch(
+  "/:id/remove_army",
+  authenticateToken,
+  isAdmin,
+  controllerWrapper(squadsController.removeSquadFromArmy)
+);
 squadRouter.delete(
   "/:id",
   authenticateToken,

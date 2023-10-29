@@ -35,7 +35,33 @@ export async function getArmyById(id: string): Promise<Army> {
         `army with id:${id} not found`
       );
     }
-    return result.rows[0];
+    const queryTanks = `SELECT * FROM tanks WHERE army_id = $1`;
+    const tanksRes = await client.query(queryTanks, values);
+    const tanks = tanksRes.rows;
+    const queryPlanes = `SELECT * FROM planes WHERE army_id = $1`;
+    const planesRes = await client.query(queryPlanes, values);
+    const planes = planesRes.rows;
+    const querySquads = `
+    SELECT squads.id, squads.name, ARRAY_AGG(json_build_object(
+      'name', weapons.name,
+      'strength', weapons.strength,
+      'bullets_req', weapons.bullets_req
+    )) AS weapons
+    FROM squads
+    LEFT JOIN squads_weapons ON squads.id = squads_weapons.squad_id
+    LEFT JOIN weapons ON squads_weapons.weapon_id = weapons.id
+    WHERE squads.army_id = $1
+    GROUP BY squads.id, squads.name;
+  `;
+    const squadsResult = await client.query(querySquads, values);
+    const squads = squadsResult.rows;
+
+    return {
+      ...result.rows[0],
+      tanks,
+      planes,
+      squads,
+    };
   } catch (err) {
     console.error("Database Error:", err);
     throw err;

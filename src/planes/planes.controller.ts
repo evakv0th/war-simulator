@@ -101,3 +101,20 @@ export async function assignPlaneToArmy(
     }
   }
 }
+
+export async function removePlaneFromArmy(
+  req: Request<{ id: string }>,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    const plane = await planesService.removePlaneFromArmy(id);
+    res.json(plane);
+  } catch (err) {
+    if (err instanceof HttpException) {
+      res.status(err.status).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}

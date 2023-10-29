@@ -9,6 +9,7 @@ import armyRouter from "../armies/armies.router";
 import tankRouter from "../tanks/tanks.router";
 import planeRouter from "../planes/planes.router";
 import squadRouter from "../squads/squads.router";
+import weaponRouter from "../weapons/weapons.router";
 
 dotenv.config();
 const app = express();
@@ -27,6 +28,7 @@ app.use("/api/v1/armies", armyRouter);
 app.use("/api/v1/tanks", tankRouter);
 app.use("/api/v1/planes", planeRouter);
 app.use("/api/v1/squads", squadRouter);
+app.use("/api/v1/weapons", weaponRouter);
 
 app.use(validatorURL);
 

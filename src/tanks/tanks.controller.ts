@@ -100,3 +100,20 @@ export async function assignTankToArmy(
     }
   }
 }
+
+export async function removeTankFromArmy(
+  req: Request<{ id: string}>,
+  res: Response
+) {
+  try {
+    const { id } = req.params;
+    const tank = await tanksService.removeTankFromArmy(id);
+    res.json(tank);
+  } catch (err) {
+    if (err instanceof HttpException) {
+      res.status(err.status).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}
