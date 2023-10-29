@@ -7,6 +7,7 @@ import { validatorURL } from "./middlewares/URLvalidator";
 import { exceptionsFilter } from "./middlewares/error-filter";
 import armyRouter from "../armies/armies.router";
 import tankRouter from "../tanks/tanks.router";
+import planeRouter from "../planes/planes.router";
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/armies", armyRouter);
 app.use("/api/v1/tanks", tankRouter);
+app.use("/api/v1/planes", planeRouter);
 
 app.use(validatorURL);
 
