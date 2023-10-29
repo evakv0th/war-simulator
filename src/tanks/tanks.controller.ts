@@ -1,14 +1,14 @@
 import { ValidatedRequest } from "express-joi-validation";
 import HttpStatusCode from "../application/exceptions/statusCode";
-import * as armiesService from "./armies.service";
+import * as tanksService from "./tanks.service";
 import { Request, Response } from "express";
 import HttpException from "../application/exceptions/http-exceptions";
-import { ArmyRequest } from "./types/armies.interfaces";
+import { TankRequest } from "./types/tanks.interfaces";
 
-export async function getArmies(req: Request, res: Response) {
+export async function getTanks(req: Request, res: Response) {
   try {
-    const armies = await armiesService.getArmies();
-    res.json(armies);
+    const tanks = await tanksService.getTanks();
+    res.json(tanks);
   } catch (err) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
@@ -18,12 +18,12 @@ export async function getArmies(req: Request, res: Response) {
   }
 }
 
-export async function getArmyById(req: Request<{ id: string }>, res: Response) {
+export async function getTankById(req: Request<{ id: string }>, res: Response) {
   try {
     const { id } = req.params;
-    const army = await armiesService.getArmyById(id);
+    const tank = await tanksService.getTankById(id);
 
-    res.json(army);
+    res.json(tank);
   } catch (err) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
@@ -33,14 +33,14 @@ export async function getArmyById(req: Request<{ id: string }>, res: Response) {
   }
 }
 
-export async function postArmy(
-  req: ValidatedRequest<ArmyRequest>,
+export async function postTank(
+  req: ValidatedRequest<TankRequest>,
   res: Response
 ) {
   try {
-    const army = await armiesService.postArmy(req.body);
+    const tank = await tanksService.postTank(req.body);
 
-    res.status(HttpStatusCode.CREATED).json(army);
+    res.status(HttpStatusCode.CREATED).json(tank);
   } catch (err) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
@@ -50,14 +50,14 @@ export async function postArmy(
   }
 }
 
-export async function updateArmy(
-  req: ValidatedRequest<ArmyRequest>,
+export async function updateTank(
+  req: ValidatedRequest<TankRequest>,
   res: Response
 ) {
   try {
     const { id } = req.params;
-    const army = await armiesService.updateArmy(id, req.body);
-    res.json(army);
+    const tank = await tanksService.updateTank(id, req.body);
+    res.json(tank);
   } catch (err) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
@@ -67,29 +67,31 @@ export async function updateArmy(
   }
 }
 
-export async function assignArmyToUser(
-  req: Request<{ armyId: string; userId: string }>,
+
+export async function deleteTank(req: Request<{ id: string }>, res: Response) {
+  try {
+    const { id } = req.params;
+    const tank = await tanksService.deleteTank(id);
+
+    res.status(HttpStatusCode.NO_CONTENT).json(tank);
+  } catch (err) {
+    if (err instanceof HttpException) {
+      res.status(err.status).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}
+
+
+export async function assignTankToArmy(
+  req: Request<{ tankId: string; armyId: string }>,
   res: Response
 ) {
   try {
-    const { armyId, userId } = req.params;
-    const army = await armiesService.assignArmyToUser(armyId, userId);
-    res.json(army);
-  } catch (err) {
-    if (err instanceof HttpException) {
-      res.status(err.status).json({ error: err.message });
-    } else {
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  }
-}
-
-export async function deleteArmy(req: Request<{ id: string }>, res: Response) {
-  try {
-    const { id } = req.params;
-    const army = await armiesService.deleteArmy(id);
-
-    res.status(HttpStatusCode.NO_CONTENT).json(army);
+    const { tankId, armyId } = req.params;
+    const tank = await tanksService.assignTankToArmy(tankId, armyId);
+    res.json(tank);
   } catch (err) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });

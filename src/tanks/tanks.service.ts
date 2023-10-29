@@ -1,14 +1,15 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
+import { getArmyById } from "../armies/armies.service";
 import pool from "../db";
 import { getUserById } from "../users/users.service";
-import { ArmiesCreateSchema, Army } from "./types/armies.interfaces";
+import { TanksCreateSchema, Tank } from "./types/tanks.interfaces";
 
-export async function getArmies(): Promise<Army[]> {
+export async function getTanks(): Promise<Tank[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM armies";
+    let query = "SELECT * FROM tanks";
 
     const result = await client.query(query);
     return result.rows;
@@ -20,11 +21,11 @@ export async function getArmies(): Promise<Army[]> {
   }
 }
 
-export async function getArmyById(id: string): Promise<Army> {
+export async function getTankById(id: string): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM armies WHERE id = $1";
+    let query = "SELECT * FROM tanks WHERE id = $1";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -32,7 +33,7 @@ export async function getArmyById(id: string): Promise<Army> {
     if (result.rows.length <= 0) {
       throw new HttpException(
         HttpStatusCode.NOT_FOUND,
-        `army with id:${id} not found`
+        `tank with id:${id} not found`
       );
     }
     return result.rows[0];
@@ -44,25 +45,25 @@ export async function getArmyById(id: string): Promise<Army> {
   }
 }
 
-export async function postArmy(newArmy: ArmiesCreateSchema): Promise<Army> {
+export async function postTank(newTank: TanksCreateSchema): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    const { name, advantage, fuel_amount, bullets_amount } = newArmy;
+    const { name, strength, fuel_req } = newTank;
 
     const query = {
-      text: "INSERT INTO armies (name, advantage, fuel_amount, bullets_amount, created_at, updated_at) VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING *",
-      values: [name, advantage, fuel_amount, bullets_amount],
+      text: "INSERT INTO tanks (name, strength, fuel_req, created_at, updated_at) VALUES ($1, $2, $3, NOW(), NOW()) RETURNING *",
+      values: [name, strength, fuel_req],
     };
 
-    const existingArmy = await client.query(
-      "SELECT * FROM armies WHERE name = $1",
+    const existingTank = await client.query(
+      "SELECT * FROM tanks WHERE name = $1",
       [name]
     );
-    if (existingArmy.rows.length > 0) {
+    if (existingTank.rows.length > 0) {
       throw new HttpException(
         HttpStatusCode.BAD_REQUEST,
-        `Army with that name ${name} already registered`
+        `Tank with that name ${name} already registered`
       );
     }
     const result = await client.query(query);
@@ -73,7 +74,7 @@ export async function postArmy(newArmy: ArmiesCreateSchema): Promise<Army> {
     } else {
       throw new HttpException(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
-        "Army creation failed"
+        "Tank creation failed"
       );
     }
   } catch (err) {
@@ -84,31 +85,28 @@ export async function postArmy(newArmy: ArmiesCreateSchema): Promise<Army> {
   }
 }
 
-export async function updateArmy(
+export async function updateTank(
   id: string,
-  updateData: Partial<ArmiesCreateSchema>
-): Promise<Army> {
+  updateData: Partial<TanksCreateSchema>
+): Promise<Tank> {
   const client = await pool.connect();
-  const { name, advantage, fuel_amount, bullets_amount } = updateData;
+  const { name, strength, fuel_req } = updateData;
   const values: any[] = [id];
 
   let arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
-  if (advantage) {
-    arrayWithChanges.push(`email=$${values.push(advantage)}`);
+  if (strength) {
+    arrayWithChanges.push(`strength=$${values.push(strength)}`);
   }
-  if (fuel_amount) {
-    arrayWithChanges.push(`fuel_amount=$${values.push(fuel_amount)}`);
-  }
-  if (bullets_amount) {
-    arrayWithChanges.push(`bullets_amount=$${values.push(bullets_amount)}`);
+  if (fuel_req) {
+    arrayWithChanges.push(`fuel_req=$${values.push(fuel_req)}`);
   }
 
   const changes = arrayWithChanges.join(", ");
 
-  const queryUpd = `UPDATE armies SET ${changes} WHERE id=$1 RETURNING *;`;
+  const queryUpd = `UPDATE tanks SET ${changes} WHERE id=$1 RETURNING *;`;
 
   try {
     if (arrayWithChanges.length === 0) {
@@ -120,7 +118,7 @@ export async function updateArmy(
 
     const result = await client.query(queryUpd, values);
     if (result.rowCount == 0)
-      throw new HttpException(HttpStatusCode.NOT_FOUND, "army not found");
+      throw new HttpException(HttpStatusCode.NOT_FOUND, "tank not found");
 
     return result.rows[0];
   } catch (err) {
@@ -131,11 +129,11 @@ export async function updateArmy(
   }
 }
 
-export async function deleteArmy(id: string): Promise<Army> {
+export async function deleteTank(id: string): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    let query = "DELETE FROM armies WHERE id=$1;";
+    let query = "DELETE FROM tanks WHERE id=$1;";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -148,26 +146,26 @@ export async function deleteArmy(id: string): Promise<Army> {
   }
 }
 
-export async function assignArmyToUser(
-  armyId: string,
-  userId: string
-): Promise<Army> {
+export async function assignTankToArmy(
+  tankId: string,
+  armyId: string
+): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    const user = await getUserById(userId);
-    if (!user) {
-      throw new HttpException(HttpStatusCode.NOT_FOUND, "User not found");
+    const tank = await getTankById(tankId);
+    if (!tank) {
+      throw new HttpException(HttpStatusCode.NOT_FOUND, "Tank not found");
     }
-
     const army = await getArmyById(armyId);
     if (!army) {
       throw new HttpException(HttpStatusCode.NOT_FOUND, "Army not found");
     }
 
+
     const assignQuery = {
-      text: "UPDATE armies SET user_id = $1 WHERE id = $2 RETURNING *",
-      values: [userId, armyId],
+      text: "UPDATE tanks SET army_id = $1 WHERE id = $2 RETURNING *",
+      values: [armyId, tankId],
     };
 
     const result = await client.query(assignQuery);
@@ -177,7 +175,7 @@ export async function assignArmyToUser(
     } else {
       throw new HttpException(
         HttpStatusCode.INTERNAL_SERVER_ERROR,
-        "Assigning army to user failed"
+        "Assigning tank to army failed"
       );
     }
   } catch (err) {
