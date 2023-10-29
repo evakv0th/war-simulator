@@ -8,8 +8,9 @@ export interface User {
     updated_at: Date;
   }
 
-  export interface PartialUserUpdateSchema {
-    name?: string;
-    password?: string;
-    email?: string;
+
+  export interface UserCreateSchema {
+    name: string;
+    password: string;
+    email: string;
   }

@@ -1,6 +1,6 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
-import { PartialUserUpdateSchema, User } from "../auth/types/auth.interfaces";
+import { UserCreateSchema, User } from "../auth/types/auth.interfaces";
 import pool from "../db";
 
 export async function getUsers(queryParameters?: any): Promise<User[]> {
@@ -35,7 +35,12 @@ export async function getUserById(id: string): Promise<User> {
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
-    return result.rows[0];
+    if (result.rows.length <= 0) {
+      throw new HttpException(HttpStatusCode.NOT_FOUND, `user with id:${id} not found`)
+    }
+    let queryArmy = "SELECT * FROM armies WHERE user_id = $1"
+    const army = await client.query(queryArmy, [id])
+    return {...result.rows[0], army: army.rows[0]};
   } catch (err) {
     console.error("Database Error:", err);
     throw err;
@@ -45,7 +50,7 @@ export async function getUserById(id: string): Promise<User> {
 }
 
 
-export async function updateUser(id: string, updateData: PartialUserUpdateSchema): Promise<User> {
+export async function updateUser(id: string, updateData: Partial<UserCreateSchema>): Promise<User> {
   const client = await pool.connect();
   const {name, password, email} = updateData;
   const values = [id];

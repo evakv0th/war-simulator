@@ -5,6 +5,7 @@ import userRouter from "../users/users.router";
 import bodyParser from 'body-parser';
 import { validatorURL } from "./middlewares/URLvalidator";
 import { exceptionsFilter } from "./middlewares/error-filter";
+import armyRouter from "../armies/armies.router";
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/armies", armyRouter);
 
 app.use(validatorURL);
 

@@ -40,44 +40,43 @@ export async function register(
   res: Response
 ) {
   const { name, password, email } = req.body;
-  if (name && password && email) {
+
+  try {
+    const client = await pool.connect();
+
     try {
-      const client = await pool.connect();
+      const checkUserQuery = {
+        text: "SELECT id FROM users WHERE name = $1 OR email = $2",
+        values: [name, email],
+      };
 
-      try {
-        const checkUserQuery = {
-          text: "SELECT id FROM users WHERE name = $1 OR email = $2",
-          values: [name, email],
-        };
-  
-        const checkResult = await client.query(checkUserQuery);
-  
-        if (checkResult.rows.length > 0) {
-          return res.status(400).send("User with the same username or email already exists.");
-        }
+      const checkResult = await client.query(checkUserQuery);
 
-        const query = {
-          text: "INSERT INTO users (name, password, email, type) VALUES ($1, $2, $3, $4) RETURNING *",
-          values: [name, password, email, "user"],
-        };
-
-        const result = await client.query(query);
-
-        if (result.rows.length > 0) {
-          const user = result.rows[0];
-          res.status(201).json(user);
-        } else {
-          res.status(500).send("User registration failed.");
-        }
-      } finally {
-        client.release();
+      if (checkResult.rows.length > 0) {
+        return res
+          .status(400)
+          .send("User with the same username or email already exists.");
       }
-    } catch (err) {
-      console.error("Error in registration:", err);
-      res.status(500).send("Internal Server Error");
-    }
-  } else {
-    res.status(400).send("Bad Request");
+
+      const query = {
+        text: "INSERT INTO users (name, password, email, type) VALUES ($1, $2, $3, $4) RETURNING *",
+        values: [name, password, email, "user"],
+      };
+
+      const result = await client.query(query);
+
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+        res.status(201).json(user);
+      } else {
+        res.status(500).send("User registration failed.");
+      }
+    } finally {
+      client.release();
+    } 
+  } catch (err) {
+    console.error("Error in registration:", err);
+    res.status(500).send("Internal Server Error");
   }
 }
 
