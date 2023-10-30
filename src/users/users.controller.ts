@@ -77,6 +77,29 @@ export async function battle(
 ) {
   const id = req.user.id.toString();
   const enemyId = req.params.enemyId;
-  const user = await usersService.battle(id, enemyId);
-  res.json(user);
+  const match = await usersService.battle(id, enemyId);
+  res.json(match);
 }
+
+export async function airBattle(
+  req: AuthenticatedRequest<{ id: string }>,
+  res: Response
+) {
+  const id = req.user.id.toString();
+  const enemyId = req.params.enemyId;
+  const match = await usersService.airBattle(id, enemyId);
+  res.json(match);
+}
+
+export async function surfaceBattle(
+  req: AuthenticatedRequest<{ id: string }>,
+  res: Response
+) {
+  const id = req.user.id.toString();
+  const enemyId = req.params.enemyId;
+  const match = await usersService.surfaceBattle(id, enemyId);
+  res.json(match);
+}
+
+
+

@@ -123,7 +123,7 @@ export async function updateArmy(
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
   if (advantage) {
-    arrayWithChanges.push(`email=$${values.push(advantage)}`);
+    arrayWithChanges.push(`advantage=$${values.push(advantage)}`);
   }
   if (fuel_amount) {
     arrayWithChanges.push(`fuel_amount=$${values.push(fuel_amount)}`);
@@ -161,9 +161,17 @@ export async function deleteArmy(id: string): Promise<Army> {
   const client = await pool.connect();
 
   try {
-    let query = "DELETE FROM armies WHERE id=$1;";
-    const values = [];
-    values.push(id);
+    let query = "UPDATE planes SET army_id = NULL WHERE army_id = $1";
+    const values = [id];
+    await client.query(query, values);
+
+    query = "UPDATE tanks SET army_id = NULL WHERE army_id = $1";
+    await client.query(query, values);
+
+    query = "UPDATE squads SET army_id = NULL WHERE army_id = $1";
+    await client.query(query, values);
+
+    query = "DELETE FROM armies WHERE id = $1";
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {

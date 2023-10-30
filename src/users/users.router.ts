@@ -23,6 +23,16 @@ userRouter.get(
   authenticateToken,
   controllerWrapper(usersController.battle)
 );
+userRouter.get(
+  "/battle/:enemyId/airBattle",
+  authenticateToken,
+  controllerWrapper(usersController.airBattle)
+);
+userRouter.get(
+  "/battle/:enemyId/surfaceBattle",
+  authenticateToken,
+  controllerWrapper(usersController.surfaceBattle)
+);
 userRouter.patch(
   "/:id",
   authenticateToken,
