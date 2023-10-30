@@ -10,7 +10,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
   - [Auth](#auth)
-  -   -[Register](#```POST /api/v1/auth/register```)
+  - [**Register**](#post-apiv1authregister)
   - [Users](#users)
   - [Armies](#armies)
   - [Squads](#squads)
@@ -87,7 +87,7 @@ Once the server is running, you can access the API using the specified endpoints
 
 Here are some of the available API endpoints:
 ## Auth:
-## ```POST /api/v1/auth/register```: 
+### ```POST /api/v1/auth/register```: 
 
  - ### Request Body
 
