@@ -9,14 +9,64 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Installation](#installation)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
-  - [Auth](#auth)
-  - [**Register**](#post-apiv1authregister)
-  - [Users](#users)
-  - [Armies](#armies)
-  - [Squads](#squads)
-  - [Weapons](#weapons)
-  - [Tanks](#tanks)
-  - [Planes](#planes)
+- 
+ ## Auth
+- [**Register**](#post-apiv1authregister)
+- [**Login**](#post-apiv1authlogin)
+
+## Users
+- [Get All Users](#get-apiv1users)
+- [Get User by ID](#get-apiv1usersid)
+- [Partially Update User](#patch-apiv1usersid)
+- [Delete User](#delete-apiv1usersid)
+- [Assign Battle](#get-apiv1usersbattleenemyid)
+- [Continue to Air Battle](#get-apiv1usersbattleenemyidairbattle)
+- [Continue to Surface Battle](#get-apiv1usersbattleenemyidsurfacebattle)
+
+  ## Armies
+- [Get All Armies](#get-apiv1armies)
+- [Get Army by ID](#get-apiv1armiesid)
+- [Create a New Army](#post-apiv1armies)
+- [Add Army to User](#patch-apiv1armiesidusersuserid)
+- [Partially Update Army](#patch-apiv1armiesid)
+- [Delete Army](#delete-apiv1armiesid)
+
+## Squads
+- [Get All Squads](#get-apiv1squads)
+- [Get Squad by ID](#get-apiv1squadsid)
+- [Create a New Squad](#post-apiv1squads)
+- [Partially Update Squad](#patch-apiv1squadsid)
+- [Delete Squad](#delete-apiv1squadsid)
+- [Add Squad to Army](#patch-apiv1squadsidarmiesarmyid)
+- [Remove Squad from Army](#patch-apiv1squadsidremove_army)
+
+## Weapons
+- [Get All Weapons](#get-apiv1weapons)
+- [Get Weapon by ID](#get-apiv1weaponsid)
+- [Create a New Weapon](#post-apiv1weapons)
+- [Partially Update Weapon](#patch-apiv1weaponsid)
+- [Delete Weapon](#delete-apiv1weaponsid)
+- [Add Weapon to Squad](#patch-apiv1weaponsidsquadsquadid)
+
+ ## Tanks
+- [Get All Tanks](#get-apiv1tanks)
+- [Get Tank by ID](#get-apiv1tanksid)
+- [Create a New Tank](#post-apiv1tanks)
+- [Partially Update Tank](#patch-apiv1tanksid)
+- [Delete Tank](#delete-apiv1tanksid)
+- [Add Tank to Army](#patch-apiv1tanksidarmiesarmyid)
+- [Remove Tank from Army](#patch-apiv1tanksidremove_army)
+
+## Planes
+- [Get All Planes](#get-apiv1planes)
+- [Get Plane by ID](#get-apiv1planesid)
+- [Create a New Plane](#post-apiv1planes)
+- [Partially Update Plane](#patch-apiv1planesid)
+- [Delete Plane](#delete-apiv1planesid)
+- [Add Plane to Army](#patch-apiv1planesidarmiesarmyid)
+- [Remove Plane from Army](#patch-apiv1planesidremove_army)
+
+  
 - [Diagram for Database](#diagramDB)
 
 ## Features
