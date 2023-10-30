@@ -8,8 +8,10 @@ Battle of armies! In this war simulator project, you can create and manage armie
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- 
+
+
+
+# API ENDPOINT:
  ## Auth
 - [**Register**](#post-apiv1authregister)
 - [**Login**](#post-apiv1authlogin)
@@ -172,7 +174,7 @@ Here are some of the available API endpoints:
 "message": "Internal Server Error"
 }
 ```
-```POST /api/v1/auth/login```: 
+### ```POST /api/v1/auth/login```: 
  - ### Request Body
 
 | Parameter    | Type     | Description                   |
@@ -209,7 +211,7 @@ Here are some of the available API endpoints:
 ```
 
 ## Users:
-```GET /api/v1/users```: 
+### ```GET /api/v1/users```: 
   - response 200 OK:
      ```json
     [
@@ -264,7 +266,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ]
 ```
   
-```GET /api/v1/users/:id```: Get a single user by ID.
+### ```GET /api/v1/users/:id```: Get a single user by ID.
 ### Query Parameters
 
 | Parameter    | Type   | Description                    |
@@ -313,7 +315,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```PATCH /api/v1/users/:id```: Partially update a user's information.
+### ```PATCH /api/v1/users/:id```: Partially update a user's information.
 
 ### Query Parameters
 
@@ -367,7 +369,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```DELETE /api/v1/users/:id```: Delete a user.
+### ```DELETE /api/v1/users/:id```: Delete a user.
 
 ### Query Parameters
 | Parameter    | Type   | Description                    |
@@ -397,7 +399,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```GET /api/v1/users/battle/:enemyId``` : Assign a battle with another user. It will take your id from token and your army.
+### ```GET /api/v1/users/battle/:enemyId``` : Assign a battle with another user. It will take your id from token and your army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                    |
@@ -452,7 +454,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 "message": "Internal Server Error"
 }
 ```
-```GET /api/v1/users/battle/:enemyId/airBattle``` : Continue to air Battle with your enemy.
+### ```GET /api/v1/users/battle/:enemyId/airBattle``` : Continue to air Battle with your enemy.
 ### Query Parameters
 
 | Parameter    | Type   | Description                    |
@@ -493,7 +495,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```GET /api/v1/users/battle/:enemyId/surfaceBattle``` : Continue to surface Battle with your enemy.
+### ```GET /api/v1/users/battle/:enemyId/surfaceBattle``` : Continue to surface Battle with your enemy.
 ### Query Parameters
 
 | Parameter    | Type   | Description                    |
@@ -534,7 +536,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Armies:
 
-```GET /api/v1/armies```: Get a list of armies. (and all of their tech and people)
+### ```GET /api/v1/armies```: Get a list of armies. (and all of their tech and people)
  - response 200 OK:
      ```json
    [
@@ -574,7 +576,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     ```
 
 
-```GET /api/v1/armies/:id```: Get a single army by ID (and all of their tech and people).
+### ```GET /api/v1/armies/:id```: Get a single army by ID (and all of their tech and people).
 
 ### Query Parameters
 
@@ -660,7 +662,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```POST /api/v1/armies```: Create a new army (id will be created automatically and user_id will be **null** for now).
+### ```POST /api/v1/armies```: Create a new army (id will be created automatically and user_id will be **null** for now).
 
 ### Request Body
 
@@ -703,7 +705,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/armies/:id/users/:userId```: Add army to user.
+### ```PATCH /api/v1/armies/:id/users/:userId```: Add army to user.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -752,7 +754,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 
 
-```PATCH /api/v1/armies/:id```: Partially update an army's information.
+### ```PATCH /api/v1/armies/:id```: Partially update an army's information.
 
 ### Query Parameters
 
@@ -808,7 +810,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```DELETE /api/v1/armies/:id```: Delete an army. (when deleting an army, all tanks, planes and squads from this army will have army_id set to NULL)
+### ```DELETE /api/v1/armies/:id```: Delete an army. (when deleting an army, all tanks, planes and squads from this army will have army_id set to NULL)
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -842,7 +844,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Squads:
 
-```GET /api/v1/squads```: Get a list of squads.
+### ```GET /api/v1/squads```: Get a list of squads.
  - response 200 OK:
      ```json
     [
@@ -875,7 +877,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     }
     ```
 
-```GET /api/v1/squads/:id```: Get a single squad by ID.
+### ```GET /api/v1/squads/:id```: Get a single squad by ID.
 
 ### Query Parameters
 
@@ -929,7 +931,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```POST /api/v1/squads```: Create a new squad.
+### ```POST /api/v1/squads```: Create a new squad.
 
 ### Request Body
 
@@ -968,7 +970,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```PATCH /api/v1/squads/:id```: Partially update a squad's information.
+### ```PATCH /api/v1/squads/:id```: Partially update a squad's information.
 
 ### Query Parameters
 
@@ -1020,7 +1022,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```DELETE /api/v1/squads/:id```: Delete a squad.
+### ```DELETE /api/v1/squads/:id```: Delete a squad.
 
 ### Query Parameters
 
@@ -1052,7 +1054,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/squads/:id/armies/:armyId```: Add squad to Army.
+### ```PATCH /api/v1/squads/:id/armies/:armyId```: Add squad to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -1096,7 +1098,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/squads/:id/remove_army```: Add squad to Army.
+### ```PATCH /api/v1/squads/:id/remove_army```: Add squad to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -1137,7 +1139,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Weapons:
 
-```GET /api/v1/weapons```: Get a list of weapons.
+### ```GET /api/v1/weapons```: Get a list of weapons.
  - response 200 OK:
      ```json
     [
@@ -1172,7 +1174,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     }
     ```
 
-```GET /api/v1/weapons/:id```: Get a single weapon by ID.
+### ```GET /api/v1/weapons/:id```: Get a single weapon by ID.
 
 ### Query Parameters
 
@@ -1210,7 +1212,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```POST /api/v1/weapons```: Create a new weapon.
+### ```POST /api/v1/weapons```: Create a new weapon.
 
 ### Request Body
 
@@ -1251,7 +1253,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```PATCH /api/v1/weapons/:id```: Partially update a weapon's information.
+### ```PATCH /api/v1/weapons/:id```: Partially update a weapon's information.
 
 ### Query Parameters
 
@@ -1305,7 +1307,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```DELETE /api/v1/weapons/:id```: Delete a weapon.
+### ```DELETE /api/v1/weapons/:id```: Delete a weapon.
 
 ### Query Parameters
 
@@ -1337,7 +1339,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/weapons/:id/squads/:squadId```: Add weapons to squads
+### ```PATCH /api/v1/weapons/:id/squads/:squadId```: Add weapons to squads
 
 ### Query Parameters
 
@@ -1382,7 +1384,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Tanks:
 
-```GET /api/v1/tanks```: Get a list of tanks.
+### ```GET /api/v1/tanks```: Get a list of tanks.
 
 - response 200 OK:
      ```json
@@ -1411,7 +1413,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     }
    ```
 
-```GET /api/v1/tanks/:id```: Get a single technology by ID.
+### ```GET /api/v1/tanks/:id```: Get a single technology by ID.
 
 ### Query Parameters
 
@@ -1451,7 +1453,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```POST /api/v1/tanks```: Create a new technology.
+### ```POST /api/v1/tanks```: Create a new technology.
 
 ### Request Body
 
@@ -1493,7 +1495,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```PATCH /api/v1/tanks/:id```: Partially update a technology's information.
+### ```PATCH /api/v1/tanks/:id```: Partially update a technology's information.
 
 ### Query Parameters
 
@@ -1547,7 +1549,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```DELETE /api/v1/tanks/:id```: Delete a technology.
+### ```DELETE /api/v1/tanks/:id```: Delete a technology.
 
 ### Query Parameters
 
@@ -1579,7 +1581,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/tanks/:id/armies/:armyId```: Add tech to Army.
+### ```PATCH /api/v1/tanks/:id/armies/:armyId```: Add tech to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -1625,7 +1627,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/tanks/:id/remove_army```: Add tech to Army.
+### ```PATCH /api/v1/tanks/:id/remove_army```: Add tech to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -1669,7 +1671,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 
 ## Planes:
 
-```GET /api/v1/planes```: Get a list of planes.
+### ```GET /api/v1/planes```: Get a list of planes.
 
 - response 200 OK:
      ```json
@@ -1699,7 +1701,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
     }
    ```
 
-```GET /api/v1/planes/:id```: Get a single technology by ID.
+### ```GET /api/v1/planes/:id```: Get a single technology by ID.
 
 ### Query Parameters
 
@@ -1740,7 +1742,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```POST /api/v1/planes```: Create a new technology.
+### ```POST /api/v1/planes```: Create a new technology.
 
 ### Request Body
 
@@ -1784,7 +1786,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 ```
 
 
-```PATCH /api/v1/planes/:id```: Partially update a technology's information.
+### ```PATCH /api/v1/planes/:id```: Partially update a technology's information.
 
 ### Query Parameters
 
@@ -1840,7 +1842,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```DELETE /api/v1/planes/:id```: Delete a technology.
+### ```DELETE /api/v1/planes/:id```: Delete a technology.
 
 ### Query Parameters
 
@@ -1871,7 +1873,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 "message": "Internal Server Error"
 }
 ```
-```PATCH /api/v1/planes/:id/armies/:armyId```: Add tech to Army.
+### ```PATCH /api/v1/planes/:id/armies/:armyId```: Add tech to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
@@ -1912,7 +1914,7 @@ To retrieve a list of users sorted by name, you can make a GET request to the `/
 }
 ```
 
-```PATCH /api/v1/planes/:id/remove_army```: Add tech to Army.
+### ```PATCH /api/v1/planes/:id/remove_army```: Add tech to Army.
 ### Query Parameters
 
 | Parameter    | Type   | Description                               |
