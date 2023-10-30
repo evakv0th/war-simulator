@@ -1,7 +1,16 @@
 export interface User {
     id: number;
-    username: string;
+    name: string;
     password: string;
-    type: 'normal' | 'admin';
+    type: 'user' | 'admin';
+    email: string;
+    created_at: Date;
+    updated_at: Date;
+  }
+
+
+  export interface UserCreateSchema {
+    name: string;
+    password: string;
     email: string;
   }

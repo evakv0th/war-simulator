@@ -4,6 +4,9 @@ import { AuthenticatedRequest } from './authenticateToken';
 
 export function isAdmin(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const user: User | undefined = req.user;
+  if (!user) {
+    res.status(401).send("dumb bunny no user here");
+  }
   if (user && user.type === 'admin') {
     next();
   } else {
