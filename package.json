@@ -23,6 +23,7 @@
     "@types/pg": "^8.10.7",
     "eslint": "^8.52.0",
     "nodemon": "^3.0.1",
+    "prettier": "^3.0.3",
     "psql": "^0.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
