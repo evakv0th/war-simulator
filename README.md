@@ -14,7 +14,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 
 
 
-# API ENDPOINT:
+# API ENDPOINTS:
  ## Auth
 - [**Register**](#post-register)
 - [**Login**](#post-login)
@@ -78,19 +78,12 @@ Battle of armies! In this war simulator project, you can create and manage armie
 Welcome to battle simulator!
 ### Auth about
 
-Firstly you need to register. (recommended to create admin, some actions can be done only by admin)
-
-
-Then using your name, email and password login and get token.
-
-
-After that you can use that token. You can use "Bearer [token]" or just "[token]"
+Firstly you need to register. (recommended to create admin, some actions can be done only by admin). Then using your name, email and password login and get token. After that you can use that token. You can use "Bearer [token]" or just "[token]".
 
 ### Armies about
-In this simulator you can create and manage your own army. (add tanks, planes, squads)
-Every army has a fuel_amount and bullets_amount which are maximum of 1000.
-Every army has 1 of 4 advantages:
+In this simulator you can create and manage your own army. (add tanks, planes, squads). Every army has a fuel_amount and bullets_amount which are maximum of 1000. 
 
+Every army has 1 of 4 advantages:
 
 1. **air** - each aircraft will have 1.5x strength
 2. **heavyTech** - each tank will have 1.5x strength
@@ -98,15 +91,13 @@ Every army has 1 of 4 advantages:
 4. **patriotic** - each squad will have 1.5x strength
 
 You can battle another army in this simulator! All you need is to use endpoint and specify your enemy's ID, we will take your army from your token.
-For starting battle its required to:
 
+For starting battle its required to:
 
 1. You and your opponent need to have at least 1 tank, 1 squad(with weapons) and 1 plane.
 2. You are not currently in a fight with another user.
 
-Battle has 3 stages, they are managed by using 3 endpoints - battle, airBattle and surfaceBattle.
-In this simulator its obligatory to battle step by step. First - you start the battle, then you continue in airbattle and final result will be after the surface battle.
-Its required to finish your battle before starting another one.
+Battle has 3 stages, they are managed by using 3 endpoints - battle, airBattle and surfaceBattle. In this simulator its obligatory to battle step by step. First - you start the battle, then you continue in airbattle and final result will be after the surface battle. Its required to finish your battle before starting another one.
 
 Stages of battle:
 1) Battle start - you are being warned that battle started and we shouw stats of your army and enemy's army.
