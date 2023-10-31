@@ -15,11 +15,11 @@ Battle of armies! In this war simulator project, you can create and manage armie
 
 
 ## API ENDPOINTS:
- ### Auth
+### Auth
 - [**Register**](#post-register)
 - [**Login**](#post-login)
 
-  ### Users
+### Users
 - [Get All Users](#get-all-users)
 - [Get User by ID](#get-user)
 - [Partially Update User](#patch-user)
@@ -28,7 +28,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Continue to Air Battle](#get-air-battle)
 - [Continue to Surface Battle](#get-surface-battle)
 
-  ### Armies
+### Armies
 - [Get All Armies](#get-all-armies)
 - [Get Army by ID](#get-army)
 - [Create a New Army](#post-army)
@@ -36,7 +36,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Partially Update Army](#patch-army)
 - [Delete Army](#delete-army)
 
-  ### Squads
+### Squads
 - [Get All Squads](#get-all-squads)
 - [Get Squad by ID](#get-squad)
 - [Create a New Squad](#post-squad)
@@ -45,7 +45,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Add Squad to Army](#add-squad-to-army)
 - [Remove Squad from Army](#remove-squad-from-army)
 
-  ### Weapons
+### Weapons
 - [Get All Weapons](#get-all-weapons)
 - [Get Weapon by ID](#get-weapon)
 - [Create a New Weapon](#post-weapon)
@@ -54,7 +54,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Add Weapon to Squad](#add-weapon-to-squad)
 - [Remove Weapon from Squad](#remove-weapon-from-squad)
 
-  ### Tanks
+### Tanks
 - [Get All Tanks](#get-all-tanks)
 - [Get Tank by ID](#get-tank)
 - [Create a New Tank](#post-tank)
