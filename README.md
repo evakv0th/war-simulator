@@ -90,6 +90,8 @@ After that you can use that token. You can use "Bearer [token]" or just "[token]
 In this simulator you can create and manage your own army. (add tanks, planes, squads)
 Every army has a fuel_amount and bullets_amount which are maximum of 1000.
 Every army has 1 of 4 advantages:
+
+
 -**air** - each aircraft will have 1.5x strength
 -**heavyTech** - each tank will have 1.5x strength
 -**minefield** - at the start of the battle each enemy unit (except for planes) will have strength reduction. (tanks will have 0.7x strength, troops 0.9x strength)
@@ -97,6 +99,8 @@ Every army has 1 of 4 advantages:
 
 You can battle another army in this simulator! All you need is to use endpoint and specify your enemy's ID, we will take your army from your token.
 For starting battle its required to:
+
+
 -You and your opponent need to have at least 1 tank, 1 squad(with weapons) and 1 plane.
 -You are not currently in a fight with another user.
 
