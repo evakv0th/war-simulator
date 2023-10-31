@@ -4,8 +4,8 @@ Battle of armies! In this war simulator project, you can create and manage armie
 
 ## Table of Contents
 - [About war-simulator](#about)
-  - [Auth](#auth)
-  - [Armies](#armies)
+  - [Auth](#auth-about)
+  - [Armies](#armies-about)
   - [Tanks, Planes, Squads, Weapons](#tanks,-planes,-squads,-weapons)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -76,13 +76,17 @@ Battle of armies! In this war simulator project, you can create and manage armie
 ## About
 
 Welcome to battle simulator!
-### Auth
+### Auth about
 
 Firstly you need to register. (recommended to create admin, some actions can be done only by admin)
+
+
 Then using your name, email and password login and get token.
+
+
 After that you can use that token. You can use "Bearer [token]" or just "[token]"
 
-### Armies
+### Armies about
 In this simulator you can create and manage your own army. (add tanks, planes, squads)
 Every army has a fuel_amount and bullets_amount which are maximum of 1000.
 Every army has 1 of 4 advantages:
