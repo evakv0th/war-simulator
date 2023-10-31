@@ -13,7 +13,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 
 # API ENDPOINT:
  ## Auth
-- [**Register**](#post-apiv1authregister)
+- [**Register**](#post-register)
 - [**Login**](#post-apiv1authlogin)
 
 ## Users
@@ -49,6 +49,7 @@ Battle of armies! In this war simulator project, you can create and manage armie
 - [Partially Update Weapon](#patch-apiv1weaponsid)
 - [Delete Weapon](#delete-apiv1weaponsid)
 - [Add Weapon to Squad](#patch-apiv1weaponsidsquadsquadid)
+- [Remove Weapon from Squad](#patch-apiv1weaponsidremove_army)
 
  ## Tanks
 - [Get All Tanks](#get-apiv1tanks)
@@ -139,7 +140,8 @@ Once the server is running, you can access the API using the specified endpoints
 
 Here are some of the available API endpoints:
 ## Auth:
-### ```POST /api/v1/auth/register```: 
+### POST Register
+```POST /api/v1/auth/register```: 
 
  - ### Request Body
 
