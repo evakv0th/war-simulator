@@ -1,16 +1,19 @@
-import { Client } from 'pg';
+import dotenv from "dotenv";
+import { Client } from "pg";
+
+dotenv.config();
 
 const connectionConfig = {
-  host: 'db', 
-  port: 5432,
-  user: 'test',
-  password: 'test',
-  database: 'postgres',
+  host: process.env.DATABASE_HOST as any,
+  port: process.env.DATABASE_PORT as any,
+  user: process.env.DATABASE_USERNAME as any,
+  password: process.env.DATABASE_PASSWORD as any,
+  database: "postgres",
 };
 
 const client = new Client(connectionConfig);
 
-const newDatabaseName = 'test';
+const newDatabaseName = process.env.DATABASE_NAME;
 
 const createDatabaseQuery = `CREATE DATABASE "${newDatabaseName}"`;
 
@@ -32,7 +35,7 @@ export async function createDatabase() {
 
     await client.end();
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
   }
 }
 

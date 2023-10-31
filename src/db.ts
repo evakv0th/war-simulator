@@ -1,12 +1,15 @@
+import dotenv from "dotenv";
 import { Pool } from "pg";
 import createDatabase from "./create-db";
 
+dotenv.config();
+
 export const pool = new Pool({
-  host: "db",
-  port: 5432,
-  user: "test",
-  password: "test",
-  database: "test",
+  host: process.env.DATABASE_HOST as any,
+  port: process.env.DATABASE_PORT as any,
+  user: process.env.DATABASE_USERNAME as any,
+  password: process.env.DATABASE_PASSWORD as any,
+  database: process.env.DATABASE_NAME as any,
 });
 
 createDatabase().then(() => {
