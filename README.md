@@ -3,7 +3,10 @@
 Battle of armies! In this war simulator project, you can create and manage armies, squads, technologies, and engage in epic battles with various advantages and strengths.
 
 ## Table of Contents
-- [Features](#features)
+- [About war-simulator](#about)
+  - [Auth](#auth)
+  - [Armies](#armies)
+  - [Tanks, Planes, Squads, Weapons](#tanks,-planes,-squads,-weapons)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -14,83 +17,104 @@ Battle of armies! In this war simulator project, you can create and manage armie
 # API ENDPOINT:
  ## Auth
 - [**Register**](#post-register)
-- [**Login**](#post-apiv1authlogin)
+- [**Login**](#post-login)
 
 ## Users
-- [Get All Users](#get-apiv1users)
-- [Get User by ID](#get-apiv1usersid)
-- [Partially Update User](#patch-apiv1usersid)
-- [Delete User](#delete-apiv1usersid)
-- [Assign Battle](#get-apiv1usersbattleenemyid)
-- [Continue to Air Battle](#get-apiv1usersbattleenemyidairbattle)
-- [Continue to Surface Battle](#get-apiv1usersbattleenemyidsurfacebattle)
+- [Get All Users](#get-all-users)
+- [Get User by ID](#get-user)
+- [Partially Update User](#patch-user)
+- [Delete User](#delete-user)
+- [Assign Battle](#get-battle)
+- [Continue to Air Battle](#get-air-battle)
+- [Continue to Surface Battle](#get-surface-battle)
 
   ## Armies
-- [Get All Armies](#get-apiv1armies)
-- [Get Army by ID](#get-apiv1armiesid)
-- [Create a New Army](#post-apiv1armies)
-- [Add Army to User](#patch-apiv1armiesidusersuserid)
-- [Partially Update Army](#patch-apiv1armiesid)
-- [Delete Army](#delete-apiv1armiesid)
+- [Get All Armies](#get-all-armies)
+- [Get Army by ID](#get-army)
+- [Create a New Army](#post-army)
+- [Add Army to User](#add-army-to-user)
+- [Partially Update Army](#patch-army)
+- [Delete Army](#delete-army)
 
 ## Squads
-- [Get All Squads](#get-apiv1squads)
-- [Get Squad by ID](#get-apiv1squadsid)
-- [Create a New Squad](#post-apiv1squads)
-- [Partially Update Squad](#patch-apiv1squadsid)
-- [Delete Squad](#delete-apiv1squadsid)
-- [Add Squad to Army](#patch-apiv1squadsidarmiesarmyid)
-- [Remove Squad from Army](#patch-apiv1squadsidremove_army)
+- [Get All Squads](#get-all-squads)
+- [Get Squad by ID](#get-squad)
+- [Create a New Squad](#post-squad)
+- [Partially Update Squad](#patch-squad)
+- [Delete Squad](#delete-squad)
+- [Add Squad to Army](#add-squad-to-army)
+- [Remove Squad from Army](#remove-squad-from-army)
 
 ## Weapons
-- [Get All Weapons](#get-apiv1weapons)
-- [Get Weapon by ID](#get-apiv1weaponsid)
-- [Create a New Weapon](#post-apiv1weapons)
-- [Partially Update Weapon](#patch-apiv1weaponsid)
-- [Delete Weapon](#delete-apiv1weaponsid)
-- [Add Weapon to Squad](#patch-apiv1weaponsidsquadsquadid)
-- [Remove Weapon from Squad](#patch-apiv1weaponsidremove_army)
+- [Get All Weapons](#get-all-weapons)
+- [Get Weapon by ID](#get-weapon)
+- [Create a New Weapon](#post-weapon)
+- [Partially Update Weapon](#patch-weapon)
+- [Delete Weapon](#delete-weapon)
+- [Add Weapon to Squad](#add-weapon-to-squad)
+- [Remove Weapon from Squad](#remove-weapon-from-squad)
 
  ## Tanks
-- [Get All Tanks](#get-apiv1tanks)
-- [Get Tank by ID](#get-apiv1tanksid)
-- [Create a New Tank](#post-apiv1tanks)
-- [Partially Update Tank](#patch-apiv1tanksid)
-- [Delete Tank](#delete-apiv1tanksid)
-- [Add Tank to Army](#patch-apiv1tanksidarmiesarmyid)
-- [Remove Tank from Army](#patch-apiv1tanksidremove_army)
+- [Get All Tanks](#get-all-tanks)
+- [Get Tank by ID](#get-tank)
+- [Create a New Tank](#post-tank)
+- [Partially Update Tank](#patch-tank)
+- [Delete Tank](#delete-tank)
+- [Add Tank to Army](#add-tank-to-army)
+- [Remove Tank from Army](#remove-tank-from-army)
 
 ## Planes
-- [Get All Planes](#get-apiv1planes)
-- [Get Plane by ID](#get-apiv1planesid)
-- [Create a New Plane](#post-apiv1planes)
-- [Partially Update Plane](#patch-apiv1planesid)
-- [Delete Plane](#delete-apiv1planesid)
-- [Add Plane to Army](#patch-apiv1planesidarmiesarmyid)
-- [Remove Plane from Army](#patch-apiv1planesidremove_army)
+- [Get All Planes](#get-all-planes)
+- [Get Plane by ID](#get-plane)
+- [Create a New Plane](#post-plane)
+- [Partially Update Plane](#patch-plane)
+- [Delete Plane](#delete-plane)
+- [Add Plane to Army](#add-plane-to-army)
+- [Remove Plane from Army](#remove-plane-from-army)
 
-  
-- [Diagram for Database](#diagramDB)
 
-## Features
+## About
 
-- Create and manage armies with different strengths and advantages.
-- Each user have an army, army can have military units, ammount of fuel and ammount of bullets.
-- Each army can have single advantage: air, heavyTech, patriotic and minefield.
-- Squads can have multiple weapons, squad without weapons cannot participate in battle.
-- Add planes and tanks to your armies. Both have fuel requirements, so you cant spam heavy tech.
-- Weapons have requirements for bullets.
-- Engage in battles between armies with various advantages and strengths.
+Welcome to battle simulator!
+### Auth
 
-- ### Advantages in army:
+Firstly you need to register. (recommended to create admin, some actions can be done only by admin)
+Then using your name, email and password login and get token.
+After that you can use that token. You can use "Bearer [token]" or just "[token]"
 
+### Armies
+In this simulator you can create and manage your own army. (add tanks, planes, squads)
+Every army has a fuel_amount and bullets_amount which are maximum of 1000.
+Every army has 1 of 4 advantages:
 -**air** - each aircraft will have 1.5x strength
-
 -**heavyTech** - each tank will have 1.5x strength
-
 -**minefield** - at the start of the battle each enemy unit (except for planes) will have strength reduction. (tanks will have 0.7x strength, troops 0.9x strength)
+-**patriotic** - each squad will have 1.5x strength
 
--**patriotic** - more men - more strength. Each squad will multiply strength of all squads by 0,05 (max bonus - 2x strength)
+You can battle another army in this simulator! All you need is to use endpoint and specify your enemy's ID, we will take your army from your token.
+For starting battle its required to:
+-You and your opponent need to have at least 1 tank, 1 squad(with weapons) and 1 plane.
+-You are not currently in a fight with another user.
+
+Battle has 3 stages, they are managed by using 3 endpoints - battle, airBattle and surfaceBattle.
+In this simulator its obligatory to battle step by step. First - you start the battle, then you continue in airbattle and final result will be after the surface battle.
+Its required to finish your battle before starting another one.
+
+Stages of battle:
+1) Battle start - you are being warned that battle started and we shouw stats of your army and enemy's army.
+2) Air battle - your planes vs planes of your enemy, whoever wins will have planes on surface  battle (with reduced strength)
+3) Surface battle - your tanks+squads vs enemy tanks+squads. Also  there will be nerfed planes to help on the surface to the side that won air battle. In surface battle i've added a bit of luck, so we flip a coin before starting, and whoever gets lucky - will get multiplier in power. Everything like in real world - random matters.
+
+
+### Tanks, Planes, Squads, Weapons
+You can make any typical CRUD operation with tanks and planes. Also you can assign them to army or remove them from army.
+Tanks and planes have one-to-many with army, so army can have multiple tanks or planes.
+Tanks or planes have fuel_requirments - so you cant exceed the limit of your army. And you can add tanks or planes to army if it will overflow fuel_amount of an army.
+
+Squads are almost the same as tanks and planes, they have one to many with army. But they also relational to weapons as many to many. Logic behind t his - we are talking about weapon types like sniper rifles.
+You can do any typical CRUD operation with squads or weapon + add squad to army, remove squad from army. Also you can add weapon to squad or remove weapon from squad.
+Weapons have bullets_req that is being the same as fuel_req in tanks and planes. Its for balance reasons so you cant have many squads with many weapons in your army.
+
 
 
 ## Getting Started
@@ -176,7 +200,9 @@ Here are some of the available API endpoints:
 "message": "Internal Server Error"
 }
 ```
-### ```POST /api/v1/auth/login```: 
+### POST Login
+
+```POST /api/v1/auth/login```: 
  - ### Request Body
 
 | Parameter    | Type     | Description                   |
