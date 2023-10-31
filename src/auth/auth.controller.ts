@@ -39,7 +39,7 @@ export async function register(
   req: ValidatedRequest<UserRequest>,
   res: Response
 ) {
-  const { name, password, email } = req.body;
+  const { name, password, email, type } = req.body;
 
   try {
     const client = await pool.connect();
@@ -55,12 +55,12 @@ export async function register(
       if (checkResult.rows.length > 0) {
         return res
           .status(400)
-          .send("User with the same username or email already exists.");
+          .send("User with the same name or email already exists.");
       }
 
       const query = {
         text: "INSERT INTO users (name, password, email, type) VALUES ($1, $2, $3, $4) RETURNING *",
-        values: [name, password, email, "user"],
+        values: [name, password, email, type],
       };
 
       const result = await client.query(query);

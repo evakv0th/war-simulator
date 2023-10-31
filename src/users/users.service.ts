@@ -58,7 +58,7 @@ export async function updateUser(
   updateData: Partial<UserCreateSchema>
 ): Promise<User> {
   const client = await pool.connect();
-  const { name, password, email } = updateData;
+  const { name, password, email, type } = updateData;
   const values = [id];
 
   let arrayWithChanges = [];
@@ -70,6 +70,9 @@ export async function updateUser(
   }
   if (password) {
     arrayWithChanges.push(`password=$${values.push(password)}`);
+  }
+  if (type) {
+    arrayWithChanges.push(`type=$${values.push(type)}`);
   }
 
   const changes = arrayWithChanges.join(", ");
@@ -275,7 +278,7 @@ export async function surfaceBattle(id: string, enemyId: string) {
     } else if (coin <= 0.4) {
       enemyStr *= 1.05;
     }
-    console.log(yourStr, enemyStr, 'yours and enemy str for final battle')
+    console.log(yourStr, enemyStr, "yours and enemy str for final battle");
     if (yourStr > enemyStr) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);

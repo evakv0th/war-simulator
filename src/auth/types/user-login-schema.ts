@@ -4,6 +4,6 @@ import { User } from "./auth.interfaces";
 export interface UserRequest extends ValidatedRequestSchema {
   [ContainerTypes.Body]: Omit<
     User,
-    "id" & "type" & "created_at" & "updated_at"
+    "id" & "created_at" & "updated_at"
   >;
 }
