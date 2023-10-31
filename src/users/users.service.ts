@@ -120,15 +120,20 @@ export async function battle(id: string, enemyId: string) {
       HttpStatusCode.BAD_REQUEST,
       "please finish your last battle before starting new one"
     );
+  } else if (id === enemyId) {
+    throw new HttpException(
+      HttpStatusCode.BAD_REQUEST,
+      "You cannot fight yourself"
+    );
   }
   const client = await pool.connect();
   try {
     const battleStats = await showStats(id, enemyId);
 
     if (
-      (await battleStats).yourStats.yourPlanesAirStrength === 0 ||
-      (await battleStats).yourStats.yourTanksStrength === 0 ||
-      (await battleStats).yourStats.yourSquadsStrength === 0
+      battleStats.yourStats.yourPlanesAirStrength === 0 ||
+      battleStats.yourStats.yourTanksStrength === 0 ||
+      battleStats.yourStats.yourSquadsStrength === 0
     ) {
       throw new HttpException(
         HttpStatusCode.BAD_REQUEST,
@@ -136,9 +141,9 @@ export async function battle(id: string, enemyId: string) {
       );
     }
     if (
-      (await battleStats).enemyStats.enemyPlanesAirStrength === 0 ||
-      (await battleStats).enemyStats.enemyTanksStrength === 0 ||
-      (await battleStats).enemyStats.enemySquadsStrength === 0
+      battleStats.enemyStats.enemyPlanesAirStrength === 0 ||
+      battleStats.enemyStats.enemyTanksStrength === 0 ||
+      battleStats.enemyStats.enemySquadsStrength === 0
     ) {
       throw new HttpException(
         HttpStatusCode.BAD_REQUEST,
@@ -146,6 +151,7 @@ export async function battle(id: string, enemyId: string) {
       );
     }
     battleTracker.startBattle();
+    battleTracker.setEnemyId(enemyId);
     return {
       msg: "the battle has started! These are stats of you and your enemy (with advantages included in numbers).",
       msg2: `You can use endpoint /battle/${enemyId}/airBattle to continue the battle and start Air stage.`,
@@ -160,10 +166,21 @@ export async function battle(id: string, enemyId: string) {
 }
 
 export async function airBattle(id: string, enemyId: string) {
+  console.log(battleTracker.getEnemyId());
   if (battleTracker.getState() !== "in_progress") {
     throw new HttpException(
       HttpStatusCode.BAD_REQUEST,
       "please start battle first"
+    );
+  } else if (battleTracker.getEnemyId() !== enemyId) {
+    throw new HttpException(
+      HttpStatusCode.BAD_REQUEST,
+      `wrong id of an enemy, you've started battle with user id:${battleTracker.getEnemyId()}`
+    );
+  } else if (id === enemyId) {
+    throw new HttpException(
+      HttpStatusCode.BAD_REQUEST,
+      "You cannot fight yourself"
     );
   }
   const client = await pool.connect();
@@ -219,6 +236,16 @@ export async function surfaceBattle(id: string, enemyId: string) {
       HttpStatusCode.BAD_REQUEST,
       "please make air battle first"
     );
+  } else if (battleTracker.getEnemyId() !== enemyId) {
+    throw new HttpException(
+      HttpStatusCode.BAD_REQUEST,
+      `wrong id of an enemy, you've started battle with user id:${battleTracker.getEnemyId()}`
+    );
+  } else if (id === enemyId) {
+    throw new HttpException(
+      HttpStatusCode.BAD_REQUEST,
+      "You cannot fight yourself"
+    );
   }
   const client = await pool.connect();
   try {
@@ -248,19 +275,22 @@ export async function surfaceBattle(id: string, enemyId: string) {
     } else if (coin <= 0.4) {
       enemyStr *= 1.05;
     }
-
+    console.log(yourStr, enemyStr, 'yours and enemy str for final battle')
     if (yourStr > enemyStr) {
       battleTracker.notStarted();
+      battleTracker.setEnemyId(null);
       return {
         msg: `Congratulations! You won! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
       };
     } else if (enemyStr < yourStr) {
       battleTracker.notStarted();
+      battleTracker.setEnemyId(null);
       return {
         msg: `Sadly but you lose! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
       };
     } else {
       battleTracker.notStarted();
+      battleTracker.setEnemyId(null);
       return {
         msg: `Somehow it was a draw! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
       };

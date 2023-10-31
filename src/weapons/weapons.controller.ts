@@ -104,3 +104,23 @@ export async function assignWeaponToSquad(
     }
   }
 }
+
+export async function removeWeaponFromSquad(
+  req: Request<{ weaponId: string; squadId: string }>,
+  res: Response
+) {
+  try {
+    const { weaponId, squadId } = req.params;
+    const weapon = await weaponsService.removeWeaponFromSquad(
+      weaponId,
+      squadId
+    );
+    res.status(HttpStatusCode.NO_CONTENT).json(weapon);
+  } catch (err) {
+    if (err instanceof HttpException) {
+      res.status(err.status).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+}

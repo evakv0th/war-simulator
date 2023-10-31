@@ -198,3 +198,44 @@ export async function assignWeaponToSquad(
     client.release();
   }
 }
+
+export async function removeWeaponFromSquad(
+  weaponId: string,
+  squadId: string
+): Promise<void> {
+  const client = await pool.connect();
+
+  try {
+    const weapon = await getWeaponById(weaponId);
+    if (!weapon) {
+      throw new HttpException(HttpStatusCode.NOT_FOUND, "Weapon not found");
+    }
+
+    const squad = await getSquadById(squadId);
+    if (!squad) {
+      throw new HttpException(HttpStatusCode.NOT_FOUND, "Squad not found");
+    }
+
+    const existingAssignment = await client.query(
+      "SELECT * FROM squads_weapons WHERE squad_id = $1 AND weapon_id = $2",
+      [squadId, weaponId]
+    );
+
+    if (existingAssignment.rows.length === 0) {
+      throw new HttpException(
+        HttpStatusCode.BAD_REQUEST,
+        "Weapon is not assigned to the squad"
+      );
+    }
+
+    await client.query(
+      "DELETE FROM squads_weapons WHERE squad_id = $1 AND weapon_id = $2",
+      [squadId, weaponId]
+    );
+  } catch (err) {
+    console.error("Database Error:", err);
+    throw err;
+  } finally {
+    client.release();
+  }
+}

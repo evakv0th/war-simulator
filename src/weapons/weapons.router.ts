@@ -33,10 +33,16 @@ weaponRouter.patch(
   controllerWrapper(weaponsController.updateWeapon)
 );
 weaponRouter.patch(
-  "/:weaponId/Squad/:squadId",
+  "/:weaponId/squad/:squadId",
   authenticateToken,
   isAdmin,
   controllerWrapper(weaponsController.assignWeaponToSquad)
+);
+weaponRouter.patch(
+  "/:weaponId/squad/:squadId/remove",
+  authenticateToken,
+  isAdmin,
+  controllerWrapper(weaponsController.removeWeaponFromSquad)
 );
 weaponRouter.delete(
   "/:id",
