@@ -1,7 +1,7 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
 import { getArmyById } from "../armies/armies.service";
-import pool from "../db";
+import pool from "../application/db/db";
 import { PlanesCreateSchema, Plane } from "./types/planes.interfaces";
 
 export async function getPlanes(): Promise<Plane[]> {

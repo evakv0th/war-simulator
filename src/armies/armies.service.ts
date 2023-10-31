@@ -1,6 +1,6 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
-import pool from "../db";
+import pool from "../application/db/db";
 import { getUserById } from "../users/users.service";
 import { ArmiesCreateSchema, Army } from "./types/armies.interfaces";
 

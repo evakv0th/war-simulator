@@ -4,7 +4,7 @@ import { User } from "./types/auth.interfaces";
 import { ValidatedRequest } from "express-joi-validation";
 import { UserRequest } from "./types/user-login-schema";
 import { AuthenticatedRequest } from "../application/middlewares/authenticateToken";
-import pool from "../db";
+import pool from "../application/db/db";
 
 export async function login(req: ValidatedRequest<UserRequest>, res: Response) {
   const { name, password, email } = req.body;

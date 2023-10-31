@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import app from "./application/app";
-import './create-db'
-import './db';
+import './application/db/create-db'
+import './application/db/db';
 
 dotenv.config();
 

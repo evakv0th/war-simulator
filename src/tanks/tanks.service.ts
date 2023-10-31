@@ -1,7 +1,7 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
 import { getArmyById } from "../armies/armies.service";
-import pool from "../db";
+import pool from "../application/db/db";
 import { getUserById } from "../users/users.service";
 import { TanksCreateSchema, Tank } from "./types/tanks.interfaces";
 
@@ -229,3 +229,4 @@ export async function removeTankFromArmy(id: string): Promise<Tank> {
     client.release();
   }
 }
+

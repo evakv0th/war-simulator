@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { sKey } from "../../auth/auth.tokenGenerate";
 import { User } from "../../auth/types/auth.interfaces";
 import { sha256 } from "../../auth/auth.sha256";
-import pool from "../../db";
+import pool from "../db/db";
 
 export interface AuthenticatedRequest extends Request {
   user?: User;

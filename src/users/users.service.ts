@@ -2,7 +2,7 @@ import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
 import { BattleState } from "../application/utils/battle-state";
 import { UserCreateSchema, User } from "../auth/types/auth.interfaces";
-import pool from "../db";
+import pool from "../application/db/db";
 
 export async function getUsers(queryParameters?: any): Promise<User[]> {
   const client = await pool.connect();
