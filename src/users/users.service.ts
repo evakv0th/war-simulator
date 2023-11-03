@@ -343,7 +343,6 @@ export async function showStats(id: string, enemyId: string) {
     );
 
     let armyTanksEnemyStrength = armyTanksEnemyQ.rows[0].sum || 0;
-    console.log(armyTanksStrength, armyTanksEnemyStrength, 'TANKS STR');
     const armyPlanesQAir = await client.query(
       'SELECT SUM(air_strength) FROM planes WHERE army_id = $1',
       [armyId],
