@@ -1,5 +1,5 @@
-version: "3"
-services: 
+version: '3'
+services:
   db:
     image: postgres:11
     environment:
@@ -7,8 +7,12 @@ services:
       POSTGRES_USER: test
       POSTGRES_DB: test
     ports:
-    - "5432:5432"
+      - '5432:5432'
   app:
-    image: war-simulator
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/usr/src/app/src
     ports:
-      - 3000:3000
+      - '3000:3000'
