@@ -67,9 +67,8 @@ export async function postTank(newTank: TanksCreateSchema): Promise<Tank> {
       );
     }
     const result = await client.query(query);
-
+    console.log(result.rows[0]);
     if (result.rows.length > 0) {
-      console.log(result.rows[0]);
       return result.rows[0];
     } else {
       throw new HttpException(

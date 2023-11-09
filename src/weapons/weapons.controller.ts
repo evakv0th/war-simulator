@@ -13,7 +13,7 @@ export async function getWeapons(req: Request, res: Response) {
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
     } else {
-      res.status(500).json({ error: "Internal Server Error" });
+      res.status(500).json({ error: "Internal Server Error123123123123" });
     }
   }
 }
