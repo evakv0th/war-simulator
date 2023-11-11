@@ -15,7 +15,6 @@ export async function authenticateToken(
 ) {
   const token = req.header("Authorization")?.replace("Bearer ", "");
   if (token === "testing-code-secret-jwt"){
-    console.log(token, '12312231213123123123123123132123')
     req.user = {name: "admin", id: 1, email: "admin@gmail.com", password: "admin", type: "admin", created_at: new Date(), updated_at: new Date()};
     next();
     return;
@@ -23,8 +22,7 @@ export async function authenticateToken(
   if (token) {
     const [header, payload, signature] = token.split(".");
     const expectedSignature = sha256(header + payload + sKey);
-    console.log(expectedSignature);
-    console.log(signature);
+
 
     if (signature === expectedSignature) {
       const decodedPayload = JSON.parse(
@@ -49,12 +47,12 @@ export async function authenticateToken(
         req.user = result.rows[0];
         next();
       } else {
-        res.status(401).send("Unauthorized");
+        res.status(401).send("Unauthorized1");
       }
     } else {
-      res.status(401).send("Unauthorized");
+      res.status(401).send("Unauthorized2");
     }
   } else {
-    res.status(401).send("Unauthorized");
+    res.status(401).send("Unauthorized3");
   }
 }
