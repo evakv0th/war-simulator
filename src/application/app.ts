@@ -29,6 +29,7 @@ app.use('/api/v1/planes', planeRouter);
 app.use('/api/v1/squads', squadRouter);
 app.use('/api/v1/weapons', weaponRouter);
 console.log('live reloading works, but if you are changing .env file for db changes - restart with "docker-compose up --build"')
+console.log('if you want to test, firstly set up NOVE_ENV in .env to "test"!')
 app.use(exceptionsFilter);
 
 export default app;
