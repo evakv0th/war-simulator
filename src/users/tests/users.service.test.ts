@@ -629,13 +629,13 @@ describe('surfaceBattle', () => {
     });
 
     const mathRandomMock = jest.spyOn(Math, 'random');
-    mathRandomMock.mockReturnValue(0.5);
+    mathRandomMock.mockReturnValue(0.50);
 
     const result = await surfaceBattle(id as any, enemyId as any);
 
     mathRandomMock.mockRestore();
     expect(result.msg).toBe(
-      `Somehow it was a draw! with your str ${0} versus enemy str ${0}. Coin was ${0.5}`,
+      `Somehow it was a draw! with your str ${0} versus enemy str ${0}. Coin was ${0.50.toFixed(2)}`,
     );
 
     expect(pool.connect).toHaveBeenCalled();
