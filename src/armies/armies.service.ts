@@ -13,7 +13,6 @@ export async function getArmies(): Promise<Army[]> {
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -63,7 +62,6 @@ export async function getArmyById(id: string): Promise<Army> {
       squads,
     };
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -94,7 +92,6 @@ export async function postArmy(newArmy: ArmiesCreateSchema): Promise<Army> {
     const result = await client.query(query);
 
     if (result.rows.length > 0) {
-      console.log(result.rows[0]);
       return result.rows[0];
     } else {
       throw new HttpException(
@@ -103,7 +100,6 @@ export async function postArmy(newArmy: ArmiesCreateSchema): Promise<Army> {
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -150,7 +146,6 @@ export async function updateArmy(
 
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -175,7 +170,6 @@ export async function deleteArmy(id: string): Promise<Army> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -215,7 +209,6 @@ export async function assignArmyToUser(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();

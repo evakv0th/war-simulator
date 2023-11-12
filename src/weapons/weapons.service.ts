@@ -14,7 +14,6 @@ export async function getWeapons(): Promise<Weapon[]> {
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -38,7 +37,6 @@ export async function getWeaponById(id: string): Promise<Weapon> {
     }
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -71,7 +69,6 @@ export async function postWeapon(
     const result = await client.query(query);
 
     if (result.rows.length > 0) {
-      console.log(result.rows[0]);
       return result.rows[0];
     } else {
       throw new HttpException(
@@ -80,7 +77,6 @@ export async function postWeapon(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -124,7 +120,6 @@ export async function updateWeapon(
 
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -143,7 +138,6 @@ export async function deleteWeapon(id: string): Promise<Weapon> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -192,7 +186,6 @@ export async function assignWeaponToSquad(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -233,7 +226,6 @@ export async function removeWeaponFromSquad(
       [squadId, weaponId]
     );
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();

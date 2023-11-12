@@ -30,7 +30,6 @@ export async function login(req: ValidatedRequest<UserRequest>, res: Response) {
       client.release();
     }
   } catch (err) {
-    console.error("Error in login:", err);
     res.status(500).send("Internal Server Error");
   }
 }
@@ -75,7 +74,6 @@ export async function register(
       client.release();
     } 
   } catch (err) {
-    console.error("Error in registration:", err);
     res.status(500).send("Internal Server Error");
   }
 }

@@ -32,10 +32,10 @@ describe('getPlanes', () => {
       release: releaseMock,
     });
 
-    const tanks = await getPlanes();
+    const planes = await getPlanes();
 
-    expect(tanks).toHaveLength(2);
-    expect(tanks[1].name).toBe('plane2');
+    expect(planes).toHaveLength(2);
+    expect(planes[1].name).toBe('plane2');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -66,7 +66,7 @@ describe('getPlaneById', () => {
     jest.clearAllMocks();
   });
 
-  it('should return tank by id', async () => {
+  it('should return plane by id', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
       rows: planesForTest.filter((a) => a.id === id),
@@ -79,11 +79,11 @@ describe('getPlaneById', () => {
       release: releaseMock,
     });
 
-    const tank = await getPlaneById(id as any);
+    const plane = await getPlaneById(id as any);
 
-    expect(tank).toBeTruthy();
-    expect(tank.id).toBe(id);
-    expect(tank.name).toBe('plane1');
+    expect(plane).toBeTruthy();
+    expect(plane.id).toBe(id);
+    expect(plane.name).toBe('plane1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -141,7 +141,7 @@ describe('postPlane', () => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if tank already here', async () => {
+  it('should throw error if plane already here', async () => {
     const newPlane: PlanesCreateSchema = {
       name: planesForTest[0].name,
       air_strength: 100,
@@ -277,7 +277,7 @@ describe('updatePlane', () => {
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`tank not found`);
+      expect((error as any).message).toBe(`plane not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -327,9 +327,9 @@ describe('updatePlane', () => {
       release: releaseMock,
     });
 
-    const tank = await updatePlane(id as any, updatedInfo);
+    const plane = await updatePlane(id as any, updatedInfo);
 
-    expect(tank).toEqual(planesForTest[0]);
+    expect(plane).toEqual(planesForTest[0]);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
@@ -361,7 +361,7 @@ describe('deletePlane', () => {
     jest.clearAllMocks();
   });
 
-  it('should return tank after deleting (therefore its still will be no content in controller)', async () => {
+  it('should return plane after deleting (therefore its still will be no content in controller)', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
       rows: planesForTest.filter((a) => a.id === id),

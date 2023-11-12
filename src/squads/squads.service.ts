@@ -13,7 +13,6 @@ export async function getSquads(): Promise<Squad[]> {
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -50,7 +49,6 @@ export async function getSquadById(id: string): Promise<Squad> {
 
     return squad;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -81,7 +79,6 @@ export async function postSquad(newSquad: SquadsCreateSchema): Promise<Squad> {
     const result = await client.query(query);
 
     if (result.rows.length > 0) {
-      console.log(result.rows[0]);
       return result.rows[0];
     } else {
       throw new HttpException(
@@ -90,7 +87,6 @@ export async function postSquad(newSquad: SquadsCreateSchema): Promise<Squad> {
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -126,7 +122,6 @@ export async function updateSquad(
 
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -146,7 +141,6 @@ export async function deleteSquad(id: string): Promise<Squad> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -179,7 +173,6 @@ export async function assignSquadToArmy(
       (total, weapon) => total + weapon.bullets_req,
       0
     );
-    console.log(totalBulletsReq);
 
     const querySquadsInArmy = {
       text: "SELECT squads_weapons.squad_id, weapons.bullets_req FROM squads_weapons JOIN weapons ON squads_weapons.weapon_id = weapons.id WHERE squads_weapons.squad_id IN (SELECT id FROM squads WHERE army_id = $1)",
@@ -191,7 +184,6 @@ export async function assignSquadToArmy(
       (total, row) => total + row.bullets_req,
       0
     );
-    console.log(totalBulletsReqInArmy);
 
     if (army.bullets_amount - (totalBulletsReq + totalBulletsReqInArmy) < 0) {
       throw new HttpException(
@@ -216,7 +208,6 @@ export async function assignSquadToArmy(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -241,7 +232,6 @@ export async function removeSquadFromArmy(id: string): Promise<Squad> {
     const result = await client.query(queryToRemove, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();

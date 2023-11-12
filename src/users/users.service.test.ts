@@ -391,7 +391,6 @@ describe('battle', () => {
     try {
       await battle(id as any, enemyId as any);
     } catch (error) {
-      console.log(error);
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(400);
       expect((error as any).message).toBe(

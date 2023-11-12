@@ -13,7 +13,6 @@ export async function getPlanes(): Promise<Plane[]> {
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -37,7 +36,6 @@ export async function getPlaneById(id: string): Promise<Plane> {
     }
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -68,7 +66,6 @@ export async function postPlane(newPlane: PlanesCreateSchema): Promise<Plane> {
     const result = await client.query(query);
 
     if (result.rows.length > 0) {
-      console.log(result.rows[0]);
       return result.rows[0];
     } else {
       throw new HttpException(
@@ -77,7 +74,6 @@ export async function postPlane(newPlane: PlanesCreateSchema): Promise<Plane> {
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -124,7 +120,6 @@ export async function updatePlane(
 
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -141,7 +136,6 @@ export async function deletePlane(id: string): Promise<Plane> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -173,7 +167,6 @@ export async function assignPlaneToArmy(
       [armyId]
     );
     const fuelAtArmy = fuelAlreadyAtArmy.rows[0].total_fuel_req;
-    console.log(fuelAtArmy);
     const remainingFuelCapacity =
       army.fuel_amount - plane.fuel_req - fuelAtArmy;
 
@@ -200,7 +193,6 @@ export async function assignPlaneToArmy(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -226,7 +218,6 @@ export async function removePlaneFromArmy(id: string): Promise<Plane> {
     const result = await client.query(queryToRemove, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();

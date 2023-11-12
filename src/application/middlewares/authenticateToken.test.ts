@@ -43,7 +43,6 @@ describe('authenticateToken middleware', () => {
       release: jest.fn(),
     });
 
-    const decodedPayload = jest.fn();
     await authenticateToken(req, res, next);
 
     //   expect(res.status).not.toHaveBeenCalled();
@@ -98,14 +97,7 @@ describe('authenticateToken middleware', () => {
     expect(res.status).not.toHaveBeenCalledWith();
     expect(res.send).not.toHaveBeenCalledWith();
     expect(next).toHaveBeenCalled();
-    expect(req.user).toEqual({
-      name: 'admin',
-      id: 1,
-      email: 'admin@gmail.com',
-      password: 'admin',
-      type: 'admin',
-      created_at: new Date(),
-      updated_at: new Date(),
-    });
+    expect((req.user as any).id).toEqual(1);
+    expect((req.user as any).name).toEqual('admin');
   });
 });

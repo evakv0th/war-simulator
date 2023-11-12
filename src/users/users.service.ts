@@ -20,7 +20,6 @@ export async function getUsers(queryParameters?: any): Promise<User[]> {
     const result = await client.query(query, values);
     return result.rows;
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -45,7 +44,6 @@ export async function getUserById(id: string): Promise<User> {
     const army = await client.query(queryArmy, [id]);
     return { ...result.rows[0], army: army.rows[0] };
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -92,7 +90,6 @@ export async function updateUser(
 
     return result.rows[0];
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -109,7 +106,6 @@ export async function deleteUser(id: string): Promise<User> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -117,7 +113,6 @@ export async function deleteUser(id: string): Promise<User> {
 }
 
 export async function battle(id: string, enemyId: string) {
-  console.log(battleTracker.getState());
   if (battleTracker.getState() !== 'not_started') {
     throw new HttpException(
       HttpStatusCode.BAD_REQUEST,
@@ -132,7 +127,6 @@ export async function battle(id: string, enemyId: string) {
   const client = await pool.connect();
   try {
     const battleStats = await showStats(id, enemyId);
-    console.log(battleStats);
     if (
       battleStats.yourStats.yourPlanesAirStrength === 0 ||
       battleStats.yourStats.yourTanksStrength === 0 ||
@@ -161,7 +155,7 @@ export async function battle(id: string, enemyId: string) {
       battleStats: await battleStats,
     };
   } catch (err) {
-    console.error('Database Error:', err);
+
     throw err;
   } finally {
     client.release();
@@ -189,7 +183,6 @@ export async function airBattle(id: string, enemyId: string) {
   try {
     const battleStats = await showStats(id, enemyId);
 
-    console.log(battleStats);
     if (
       battleStats.yourStats.yourPlanesAirStrength >
       battleStats.enemyStats.enemyPlanesAirStrength
@@ -206,7 +199,6 @@ export async function airBattle(id: string, enemyId: string) {
       battleStats.enemyStats.enemyPlanesAirStrength
     ) {
       battleTracker.loseAirBattle();
-      console.log(battleTracker.getState());
       return {
         msg: `Your enemy won the air battle! Continue battle with /battle/${enemyId}/surfaceBattle`,
         airBattleResult: 'Defeat',
@@ -221,7 +213,6 @@ export async function airBattle(id: string, enemyId: string) {
       };
     }
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -229,7 +220,6 @@ export async function airBattle(id: string, enemyId: string) {
 }
 
 export async function surfaceBattle(id: string, enemyId: string) {
-  console.log(battleTracker.getState());
   if (
     battleTracker.getState() !== 'air_battle_won' &&
     battleTracker.getState() !== 'air_battle_lost' &&
@@ -278,8 +268,6 @@ export async function surfaceBattle(id: string, enemyId: string) {
     } else if (coin <= 0.4) {
       enemyStr *= 1.05;
     }
-    console.log(yourStr, enemyStr, 'yours and enemy str for final battle');
-    console.log(typeof yourStr, typeof enemyStr)
     let result = yourStr - enemyStr
     if (result > 0) {
       battleTracker.notStarted();
@@ -301,7 +289,6 @@ export async function surfaceBattle(id: string, enemyId: string) {
       };
     }
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();
@@ -429,7 +416,6 @@ export async function showStats(id: string, enemyId: string) {
     };
     return battleStats;
   } catch (err) {
-    console.error('Database Error:', err);
     throw err;
   } finally {
     client.release();

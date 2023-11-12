@@ -14,7 +14,6 @@ export async function getTanks(): Promise<Tank[]> {
     const result = await client.query(query);
     return result.rows;
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -38,7 +37,6 @@ export async function getTankById(id: string): Promise<Tank> {
     }
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -67,7 +65,6 @@ export async function postTank(newTank: TanksCreateSchema): Promise<Tank> {
       );
     }
     const result = await client.query(query);
-    console.log(result.rows[0]);
     if (result.rows.length > 0) {
       return result.rows[0];
     } else {
@@ -77,7 +74,6 @@ export async function postTank(newTank: TanksCreateSchema): Promise<Tank> {
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -121,7 +117,6 @@ export async function updateTank(
 
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -138,7 +133,6 @@ export async function deleteTank(id: string): Promise<Tank> {
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -153,13 +147,7 @@ export async function assignTankToArmy(
 
   try {
     const tank = await getTankById(tankId);
-    if (!tank) {
-      throw new HttpException(HttpStatusCode.NOT_FOUND, "Tank not found");
-    }
     const army = await getArmyById(armyId);
-    if (!army) {
-      throw new HttpException(HttpStatusCode.NOT_FOUND, "Army not found");
-    }
 
     const fuelAlreadyAtArmy = await client.query(
       `SELECT SUM(fuel_req) as total_fuel_req
@@ -171,7 +159,6 @@ export async function assignTankToArmy(
       [armyId]
     );
     const fuelAtArmy = fuelAlreadyAtArmy.rows[0].total_fuel_req;
-    console.log(fuelAtArmy);
     const remainingFuelCapacity = army.fuel_amount - tank.fuel_req - fuelAtArmy;
 
     if (remainingFuelCapacity < 0) {
@@ -197,7 +184,6 @@ export async function assignTankToArmy(
       );
     }
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();
@@ -222,7 +208,6 @@ export async function removeTankFromArmy(id: string): Promise<Tank> {
     const result = await client.query(queryToRemove, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Database Error:", err);
     throw err;
   } finally {
     client.release();

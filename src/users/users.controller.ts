@@ -13,11 +13,8 @@ export async function getUsers(req: Request, res: Response) {
     const name: string | undefined = req.query.name as string;
     console.log(name, ' name in user controller');
     const users = await usersService.getUsers({ name });
-    console.log(users, 'users in user controller');
-
     res.json(users);
   } catch (err) {
-    console.log(err);
     if (err instanceof HttpException) {
       res.status(err.status).json({ error: err.message });
     } else {
