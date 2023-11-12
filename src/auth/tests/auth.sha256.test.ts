@@ -1,4 +1,4 @@
-import { sha256 } from './auth.sha256';
+import { sha256 } from '../auth.sha256';
 
 describe('sha256', () => {
   it('should hash the input string', () => {

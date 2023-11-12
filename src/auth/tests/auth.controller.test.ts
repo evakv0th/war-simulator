@@ -1,13 +1,13 @@
 import { Response, Request } from "express";
-import { login, register, protectedRoute } from './auth.controller'
-import { generateToken } from './auth.tokenGenerate';
-import pool from '../application/db/db';
+import { login, register, protectedRoute } from '../auth.controller'
+import { generateToken } from '../auth.tokenGenerate';
+import pool from '../../application/db/db';
 
-jest.mock('../application/db/db', () => ({
+jest.mock('../../application/db/db', () => ({
   connect: jest.fn(),
 }));
 
-jest.mock('./auth.tokenGenerate', () => ({
+jest.mock('../auth.tokenGenerate.ts', () => ({
   generateToken: jest.fn(),
 }));
 

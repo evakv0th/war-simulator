@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
-import { generateToken } from './auth.tokenGenerate';
-import { User } from './types/auth.interfaces';
-import { sha256 } from './auth.sha256';
+import { generateToken } from '../auth.tokenGenerate';
+import { User } from '../types/auth.interfaces';
+import { sha256 } from '../auth.sha256';
 
 dotenv.config();
 
-jest.mock('./auth.sha256', () => ({
+jest.mock('../auth.sha256', () => ({
   sha256: jest.fn(),
 }));
 

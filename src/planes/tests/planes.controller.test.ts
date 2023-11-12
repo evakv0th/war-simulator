@@ -7,15 +7,15 @@ import {
   deletePlane,
   assignPlaneToArmy,
   removePlaneFromArmy,
-} from './planes.controller';
-import * as planesService from './planes.service';
-import HttpException from '../application/exceptions/http-exceptions';
-import { planesForTest } from './types/plames.for-test.array';
+} from '../planes.controller';
+import * as planesService from '../planes.service';
+import HttpException from '../../application/exceptions/http-exceptions';
+import { planesForTest } from '../types/plames.for-test.array';
 import { ValidatedRequest } from 'express-joi-validation';
-import HttpStatusCode from '../application/exceptions/statusCode';
-import { PlaneRequest } from './types/planes.interfaces';
+import HttpStatusCode from '../../application/exceptions/statusCode';
+import { PlaneRequest } from '../types/planes.interfaces';
 
-jest.mock('./planes.service');
+jest.mock('../planes.service');
 
 describe('getPlanes', () => {
   let req: Request;

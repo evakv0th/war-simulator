@@ -1,28 +1,31 @@
 import {
-  getTankById,
-  getTanks,
-  postTank,
-  updateTank,
-  deleteTank,
-  assignTankToArmy,
-  removeTankFromArmy,
-} from './tanks.service';
-import { pool } from '../application/db/db';
-import { tanksForTest } from './types/tanks.for-test.array';
-import HttpException from '../application/exceptions/http-exceptions';
-import { TanksCreateSchema } from './types/tanks.interfaces';
-import { armiesForTest } from '../armies/types/armies.for-test.array';
+  getArmies,
+  getArmyById,
+  postArmy,
+  updateArmy,
+  deleteArmy,
+  assignArmyToUser,
+} from '../armies.service';
+import { pool } from '../../application/db/db';
+import HttpException from '../../application/exceptions/http-exceptions';
+import {
+  Army,
+  ArmiesCreateSchema,
+  ArmyAdvantage,
+} from '../types/armies.interfaces';
+import { armiesForTest } from '../types/armies.for-test.array';
+import { usersForTest } from '../../auth/types/auth.for-test.array';
 
-jest.mock('../application/db/db');
+jest.mock('../../application/db/db');
 
-describe('getTanks', () => {
+describe('getArmies', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return tanks from the database', async () => {
+  it('should return Armies from the database', async () => {
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest,
+      rows: armiesForTest,
     });
 
     const releaseMock = jest.fn();
@@ -32,10 +35,10 @@ describe('getTanks', () => {
       release: releaseMock,
     });
 
-    const tanks = await getTanks();
+    const armys = await getArmies();
 
-    expect(tanks).toHaveLength(2);
-    expect(tanks[1].name).toBe('tank2');
+    expect(armys).toHaveLength(2);
+    expect(armys[1].name).toBe('army2');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -50,7 +53,7 @@ describe('getTanks', () => {
     );
 
     try {
-      await getTanks();
+      await getArmies();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -61,15 +64,15 @@ describe('getTanks', () => {
   });
 });
 
-describe('getTankById', () => {
+describe('getArmyById', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return tank by id', async () => {
+  it('should return army by id', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
+      rows: armiesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -79,21 +82,21 @@ describe('getTankById', () => {
       release: releaseMock,
     });
 
-    const tank = await getTankById(id as any);
+    const army = await getArmyById(id as any);
 
-    expect(tank).toBeTruthy();
-    expect(tank.id).toBe(id);
-    expect(tank.name).toBe('tank1');
+    expect(army).toBeTruthy();
+    expect(army.id).toBe(id);
+    expect(army.name).toBe('army1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should throw error if wrong id or tank does not exist', async () => {
+  it('should throw error if wrong id or Army does not exist', async () => {
     const id = 99;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
+      rows: armiesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -104,11 +107,11 @@ describe('getTankById', () => {
     });
 
     try {
-      await getTankById(id as any);
+      await getArmyById(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`tank with id:${id} not found`);
+      expect((error as any).message).toBe(`army with id:${id} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -125,7 +128,7 @@ describe('getTankById', () => {
     );
 
     try {
-      await getTankById(id as any);
+      await getArmyById(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -136,19 +139,20 @@ describe('getTankById', () => {
   });
 });
 
-describe('postTank', () => {
+describe('postArmy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if tank already here', async () => {
-    const newTank: TanksCreateSchema = {
-      name: tanksForTest[0].name,
-      strength: 100,
-      fuel_req: 100,
+  it('should throw error if army already here', async () => {
+    const newArmy: ArmiesCreateSchema = {
+      name: armiesForTest[0].name,
+      advantage: ArmyAdvantage.AIR,
+      fuel_amount: 100,
+      bullets_amount: 100,
     };
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.name === newTank.name),
+      rows: armiesForTest.filter((a) => a.name === newArmy.name),
     });
 
     const releaseMock = jest.fn();
@@ -159,12 +163,12 @@ describe('postTank', () => {
     });
 
     try {
-      await postTank(newTank);
+      await postArmy(newArmy);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(400);
       expect((error as any).message).toBe(
-        `Tank with that name ${tanksForTest[0].name} already registered`,
+        `Army with that name ${armiesForTest[0].name} already registered`,
       );
     }
 
@@ -173,11 +177,12 @@ describe('postTank', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should throw error 500 if tank creation failed', async () => {
-    const newTank: TanksCreateSchema = {
-      name: tanksForTest[0].name,
-      strength: 100,
-      fuel_req: 100,
+  it('should throw error 500 if Army creation failed', async () => {
+    const newArmy: ArmiesCreateSchema = {
+      name: armiesForTest[0].name,
+      advantage: ArmyAdvantage.AIR,
+      fuel_amount: 100,
+      bullets_amount: 100,
     };
     const queryMock = jest.fn().mockResolvedValue({
       rows: [],
@@ -191,11 +196,11 @@ describe('postTank', () => {
     });
 
     try {
-      await postTank(newTank);
+      await postArmy(newArmy);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(500);
-      expect((error as any).message).toBe(`Tank creation failed`);
+      expect((error as any).message).toBe(`Army creation failed`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -203,11 +208,12 @@ describe('postTank', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return tank after creation', async () => {
-    const newTank: TanksCreateSchema = {
-      name: '12312312321312312123123123231123123123123123123123123',
-      strength: 100,
-      fuel_req: 100,
+  it('should return Army after creation', async () => {
+    const newArmy: ArmiesCreateSchema = {
+      name: '12312321321123123',
+      advantage: ArmyAdvantage.AIR,
+      fuel_amount: 100,
+      bullets_amount: 100,
     };
     const queryMock = jest.fn();
     queryMock
@@ -215,7 +221,7 @@ describe('postTank', () => {
         return { rows: [] };
       })
       .mockImplementationOnce(() => {
-        return { rows: [newTank] };
+        return { rows: [newArmy] };
       });
     const releaseMock = jest.fn();
 
@@ -224,9 +230,9 @@ describe('postTank', () => {
       release: releaseMock,
     });
 
-    const tank = await postTank(newTank);
+    const Army = await postArmy(newArmy);
 
-    expect(tank).toEqual(newTank);
+    expect(Army).toEqual(newArmy);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -235,14 +241,12 @@ describe('postTank', () => {
   it('should handle database error', async () => {
     const releaseMock = jest.fn();
 
-    const id = 1;
-
     (pool.connect as jest.Mock).mockRejectedValue(
       new Error('Connection error'),
     );
 
     try {
-      await postTank(id as any);
+      await postArmy({ name: 'jeff1' } as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -253,15 +257,15 @@ describe('postTank', () => {
   });
 });
 
-describe('updateTank', () => {
+describe('updateArmy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if wrong id or tank does not exist', async () => {
+  it('should throw error if wrong id or Army does not exist', async () => {
     const id = 99;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.find((a) => (a.id = id)),
+      rows: armiesForTest.find((a) => (a.id = id)),
     });
 
     const releaseMock = jest.fn();
@@ -272,11 +276,11 @@ describe('updateTank', () => {
     });
 
     try {
-      await updateTank(id as any, { name: 'jeff1' });
+      await updateArmy(id as any, { name: 'jeff1' });
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`tank not found`);
+      expect((error as any).message).toBe(`army not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -286,7 +290,7 @@ describe('updateTank', () => {
   it('should throw error if wrong no valid field for update', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.find((a) => (a.id = id)),
+      rows: armiesForTest.find((a) => (a.id = id)),
     });
 
     const releaseMock = jest.fn();
@@ -297,7 +301,7 @@ describe('updateTank', () => {
     });
 
     try {
-      await updateTank(id as any, { nam: 'jeff' } as any);
+      await updateArmy(id as any, { nam: 'jeff' } as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(400);
@@ -310,13 +314,13 @@ describe('updateTank', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return updated tank', async () => {
+  it('should return updated Army', async () => {
     const id = 1;
     const updatedInfo = {
       name: 'jeff',
     };
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => (a.id === id)),
+      rows: armiesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -326,9 +330,9 @@ describe('updateTank', () => {
       release: releaseMock,
     });
 
-    const tank = await updateTank(id as any, updatedInfo);
+    const army = await updateArmy(id as any, updatedInfo);
 
-    expect(tank).toEqual(tanksForTest[0]);
+    expect(army).toEqual(armiesForTest[0]);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
@@ -344,7 +348,7 @@ describe('updateTank', () => {
     );
 
     try {
-      await updateTank(id as any, '21312' as any);
+      await updateArmy(id as any, '21312' as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -355,16 +359,15 @@ describe('updateTank', () => {
   });
 });
 
-
-describe('deleteTank', () => {
+describe('deleteArmy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return tank after deleting (therefore its still will be no content in controller)', async () => {
+  it('should return army after deleting (therefore its still will be no content in controller)', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
+      rows: armiesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -374,11 +377,11 @@ describe('deleteTank', () => {
       release: releaseMock,
     });
 
-    const tank = await deleteTank(id as any);
+    const Army = await deleteArmy(id as any);
 
-    expect(tank).toBeTruthy();
-    expect(tank.id).toBe(id);
-    expect(tank.name).toBe('tank1');
+    expect(Army).toBeTruthy();
+    expect(Army.id).toBe(id);
+    expect(Army.name).toBe('army1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -395,7 +398,7 @@ describe('deleteTank', () => {
     );
 
     try {
-      await deleteTank(id as any);
+      await deleteArmy(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -406,16 +409,16 @@ describe('deleteTank', () => {
   });
 });
 
-describe('assignTankToArmy', () => {
+describe('assignArmyToUser', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if wrong id or tank does not exist', async () => {
+  it('should throw error if wrong id or Army does not exist', async () => {
     const id = 99;
-    const armyId = 1
+    const userId = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
+      rows: usersForTest.filter((a) => a.id === userId),
     });
 
     const releaseMock = jest.fn();
@@ -426,19 +429,19 @@ describe('assignTankToArmy', () => {
     });
 
     try {
-      await assignTankToArmy(id as any, armyId as any);
+      await assignArmyToUser(id as any, userId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`tank with id:${id} not found`);
+      expect((error as any).message).toBe(`Army with id:${id} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
-  it('should throw error if wrong id or army does not exist', async () => {
+  it('should throw error if wrong id or user does not exist', async () => {
     const id = 1;
-    const armyId = 99;
+    const userId = 99;
     const queryMock = jest.fn().mockResolvedValue({
       rows: armiesForTest.filter((a) => a.id === id),
     });
@@ -451,22 +454,22 @@ describe('assignTankToArmy', () => {
     });
 
     try {
-      await assignTankToArmy(id as any, armyId as any);
+      await assignArmyToUser(id as any, userId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`Army not found`);
+      expect((error as any).message).toBe(`user with id:${userId} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return tank after assigning', async () => {
+  it('should return Army after assigning', async () => {
     const id = 1;
     const armyId = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
+      rows: armiesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -476,15 +479,14 @@ describe('assignTankToArmy', () => {
       release: releaseMock,
     });
 
-    const tank = await assignTankToArmy(id as any, armyId as any)
+    const Army = await assignArmyToUser(id as any, armyId as any);
 
-    expect(tank).toEqual(tanksForTest[0]);
+    expect(Army).toEqual(armiesForTest[0]);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
-
 
   it('should handle database error', async () => {
     const releaseMock = jest.fn();
@@ -497,83 +499,7 @@ describe('assignTankToArmy', () => {
     );
 
     try {
-      await assignTankToArmy(id as any, armyId as any);
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-      expect((error as any).message).toBe('Connection error');
-    }
-
-    expect(pool.connect).toHaveBeenCalled();
-    expect(releaseMock).not.toHaveBeenCalled();
-  });
-});
-
-
-describe('removeTankFromArmy', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('should return tank after removing from army', async () => {
-    const id = 1;
-    const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
-    });
-
-    const releaseMock = jest.fn();
-
-    (pool.connect as jest.Mock).mockResolvedValue({
-      query: queryMock,
-      release: releaseMock,
-    });
-
-    const tank = await removeTankFromArmy(id as any);
-
-    expect(tank).toBeTruthy();
-    expect(tank.id).toBe(id);
-    expect(tank.name).toBe('tank1');
-
-    expect(pool.connect).toHaveBeenCalled();
-    expect(queryMock).toHaveBeenCalled();
-    expect(releaseMock).toHaveBeenCalled();
-  });
-
-  it('should throw error if wrong id or tank does not exist', async () => {
-    const id = 99;
-    const queryMock = jest.fn().mockResolvedValue({
-      rows: tanksForTest.filter((a) => a.id === id),
-    });
-
-    const releaseMock = jest.fn();
-
-    (pool.connect as jest.Mock).mockResolvedValue({
-      query: queryMock,
-      release: releaseMock,
-    });
-
-    try {
-      await removeTankFromArmy(id as any);
-    } catch (error) {
-      expect(error).toBeInstanceOf(HttpException);
-      expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`tank with id:${id} not found`);
-    }
-
-    expect(pool.connect).toHaveBeenCalled();
-    expect(releaseMock).toHaveBeenCalled();
-  });
-
-  it('should handle database error', async () => {
-    const releaseMock = jest.fn();
-
-    const id = 1;
-
-    (pool.connect as jest.Mock).mockRejectedValue(
-      new Error('Connection error'),
-    );
-
-    try {
-      await removeTankFromArmy(id as any);
+      await assignArmyToUser(id as any, armyId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');

@@ -6,14 +6,14 @@ import {
   battle,
   airBattle,
   surfaceBattle,
-} from './users.service';
-import { pool } from '../application/db/db';
-import { usersForTest } from '../auth/types/auth.for-test.array';
-import HttpException from '../application/exceptions/http-exceptions';
-import { BattleState } from '../application/utils/battle-state';
+} from '../users.service';
+import { pool } from '../../application/db/db';
+import { usersForTest } from '../../auth/types/auth.for-test.array';
+import HttpException from '../../application/exceptions/http-exceptions';
+import { BattleState } from '../../application/utils/battle-state';
 
-jest.mock('../application/db/db');
-jest.mock('../application/utils/battle-state');
+jest.mock('../../application/db/db');
+jest.mock('../../application/utils/battle-state');
 
 describe('getUsers', () => {
   afterEach(() => {

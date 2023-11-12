@@ -1,28 +1,28 @@
 import {
-  getSquads,
-  getSquadById,
-  postSquad,
-  updateSquad,
-  deleteSquad,
-  assignSquadToArmy,
-  removeSquadFromArmy,
-} from './squads.service';
-import { pool } from '../application/db/db';
-import { squadsForTest } from './types/squads.for-test.array';
-import HttpException from '../application/exceptions/http-exceptions';
-import { Squad, SquadsCreateSchema } from './types/squads.interfaces';
-import { armiesForTest } from '../armies/types/armies.for-test.array';
+  getPlanes,
+  getPlaneById,
+  postPlane,
+  updatePlane,
+  deletePlane,
+  assignPlaneToArmy,
+  removePlaneFromArmy,
+} from '../planes.service';
+import { pool } from '../../application/db/db';
+import { planesForTest } from '../types/plames.for-test.array';
+import HttpException from '../../application/exceptions/http-exceptions';
+import { Plane, PlanesCreateSchema } from '../types/planes.interfaces';
+import { armiesForTest } from '../../armies/types/armies.for-test.array';
 
-jest.mock('../application/db/db');
+jest.mock('../../application/db/db');
 
-describe('getSquads', () => {
+describe('getPlanes', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return Squads from the database', async () => {
+  it('should return planes from the database', async () => {
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest,
+      rows: planesForTest,
     });
 
     const releaseMock = jest.fn();
@@ -32,10 +32,10 @@ describe('getSquads', () => {
       release: releaseMock,
     });
 
-    const squads = await getSquads();
+    const planes = await getPlanes();
 
-    expect(squads).toHaveLength(2);
-    expect(squads[1].name).toBe('squad2');
+    expect(planes).toHaveLength(2);
+    expect(planes[1].name).toBe('plane2');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -50,7 +50,7 @@ describe('getSquads', () => {
     );
 
     try {
-      await getSquads();
+      await getPlanes();
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -61,15 +61,15 @@ describe('getSquads', () => {
   });
 });
 
-describe('getSquadById', () => {
+describe('getPlaneById', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return squad by id', async () => {
+  it('should return plane by id', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -79,21 +79,21 @@ describe('getSquadById', () => {
       release: releaseMock,
     });
 
-    const squad = await getSquadById(id as any);
+    const plane = await getPlaneById(id as any);
 
-    expect(squad).toBeTruthy();
-    expect(squad.id).toBe(id);
-    expect(squad.name).toBe('squad1');
+    expect(plane).toBeTruthy();
+    expect(plane.id).toBe(id);
+    expect(plane.name).toBe('plane1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should throw error if wrong id or Squad does not exist', async () => {
+  it('should throw error if wrong id or plane does not exist', async () => {
     const id = 99;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -104,11 +104,11 @@ describe('getSquadById', () => {
     });
 
     try {
-      await getSquadById(id as any);
+      await getPlaneById(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`squad with id:${id} not found`);
+      expect((error as any).message).toBe(`plane with id:${id} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -125,7 +125,7 @@ describe('getSquadById', () => {
     );
 
     try {
-      await getSquadById(id as any);
+      await getPlaneById(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -136,17 +136,20 @@ describe('getSquadById', () => {
   });
 });
 
-describe('postSquad', () => {
+describe('postPlane', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if squad already here', async () => {
-    const newSquad: SquadsCreateSchema = {
-      name: squadsForTest[0].name,
+  it('should throw error if plane already here', async () => {
+    const newPlane: PlanesCreateSchema = {
+      name: planesForTest[0].name,
+      air_strength: 100,
+      surface_strength: 50,
+      fuel_req: 100,
     };
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.name === newSquad.name),
+      rows: planesForTest.filter((a) => a.name === newPlane.name),
     });
 
     const releaseMock = jest.fn();
@@ -157,12 +160,12 @@ describe('postSquad', () => {
     });
 
     try {
-      await postSquad(newSquad);
+      await postPlane(newPlane);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(400);
       expect((error as any).message).toBe(
-        `Squad with that name ${squadsForTest[0].name} already registered`,
+        `Plane with that name ${planesForTest[0].name} already registered`,
       );
     }
 
@@ -171,9 +174,12 @@ describe('postSquad', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should throw error 500 if Squad creation failed', async () => {
-    const newSquad: SquadsCreateSchema = {
-      name: squadsForTest[0].name,
+  it('should throw error 500 if plane creation failed', async () => {
+    const newPlane: PlanesCreateSchema = {
+      name: planesForTest[0].name,
+      air_strength: 100,
+      surface_strength: 50,
+      fuel_req: 100,
     };
     const queryMock = jest.fn().mockResolvedValue({
       rows: [],
@@ -187,11 +193,11 @@ describe('postSquad', () => {
     });
 
     try {
-      await postSquad(newSquad);
+      await postPlane(newPlane);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(500);
-      expect((error as any).message).toBe(`Squad creation failed`);
+      expect((error as any).message).toBe(`Plane creation failed`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -199,9 +205,12 @@ describe('postSquad', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return Squad after creation', async () => {
-    const newSquad: SquadsCreateSchema = {
+  it('should return plane after creation', async () => {
+    const newPlane: PlanesCreateSchema = {
       name: '123333333333333333333333',
+      air_strength: 100,
+      surface_strength: 50,
+      fuel_req: 100,
     };
     const queryMock = jest.fn();
     queryMock
@@ -209,7 +218,7 @@ describe('postSquad', () => {
         return { rows: [] };
       })
       .mockImplementationOnce(() => {
-        return { rows: [newSquad] };
+        return { rows: [newPlane] };
       });
     const releaseMock = jest.fn();
 
@@ -218,9 +227,9 @@ describe('postSquad', () => {
       release: releaseMock,
     });
 
-    const Squad = await postSquad(newSquad);
+    const plane = await postPlane(newPlane);
 
-    expect(Squad).toEqual(newSquad);
+    expect(plane).toEqual(newPlane);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -234,7 +243,7 @@ describe('postSquad', () => {
     );
 
     try {
-      await postSquad({ name: 'jeff1' } as any);
+      await postPlane({ name: 'jeff1' } as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -245,15 +254,15 @@ describe('postSquad', () => {
   });
 });
 
-describe('updateSquad', () => {
+describe('updatePlane', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if wrong id or Squad does not exist', async () => {
+  it('should throw error if wrong id or plane does not exist', async () => {
     const id = 99;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.find((a) => (a.id = id)),
+      rows: planesForTest.find((a) => (a.id = id)),
     });
 
     const releaseMock = jest.fn();
@@ -264,11 +273,11 @@ describe('updateSquad', () => {
     });
 
     try {
-      await updateSquad(id as any, { name: 'jeff1' });
+      await updatePlane(id as any, { name: 'jeff1' });
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`squad not found`);
+      expect((error as any).message).toBe(`plane not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -278,7 +287,7 @@ describe('updateSquad', () => {
   it('should throw error if wrong no valid field for update', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.find((a) => (a.id = id)),
+      rows: planesForTest.find((a) => (a.id = id)),
     });
 
     const releaseMock = jest.fn();
@@ -289,7 +298,7 @@ describe('updateSquad', () => {
     });
 
     try {
-      await updateSquad(id as any, { nam: 'jeff' } as any);
+      await updatePlane(id as any, { nam: 'jeff' } as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(400);
@@ -299,15 +308,16 @@ describe('updateSquad', () => {
     }
 
     expect(pool.connect).toHaveBeenCalled();
+    expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return updated Squad', async () => {
+  it('should return updated plane', async () => {
     const id = 1;
     const updatedInfo = {
       name: 'jeff',
     };
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -317,9 +327,9 @@ describe('updateSquad', () => {
       release: releaseMock,
     });
 
-    const squad = await updateSquad(id as any, updatedInfo);
+    const plane = await updatePlane(id as any, updatedInfo);
 
-    expect(squad).toEqual(squadsForTest[0]);
+    expect(plane).toEqual(planesForTest[0]);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
@@ -335,7 +345,7 @@ describe('updateSquad', () => {
     );
 
     try {
-      await updateSquad(id as any, '21312' as any);
+      await updatePlane(id as any, '21312' as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -346,15 +356,15 @@ describe('updateSquad', () => {
   });
 });
 
-describe('deleteSquad', () => {
+describe('deletePlane', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return squad after deleting (therefore its still will be no content in controller)', async () => {
+  it('should return plane after deleting (therefore its still will be no content in controller)', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -364,11 +374,11 @@ describe('deleteSquad', () => {
       release: releaseMock,
     });
 
-    const Squad = await deleteSquad(id as any);
+    const plane = await deletePlane(id as any);
 
-    expect(Squad).toBeTruthy();
-    expect(Squad.id).toBe(id);
-    expect(Squad.name).toBe('squad1');
+    expect(plane).toBeTruthy();
+    expect(plane.id).toBe(id);
+    expect(plane.name).toBe('plane1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -385,7 +395,7 @@ describe('deleteSquad', () => {
     );
 
     try {
-      await deleteSquad(id as any);
+      await deletePlane(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -396,16 +406,16 @@ describe('deleteSquad', () => {
   });
 });
 
-describe('assignSquadToArmy', () => {
+describe('assignPlaneToArmy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should throw error if wrong id or Squad does not exist', async () => {
+  it('should throw error if wrong id or plane does not exist', async () => {
     const id = 99;
     const armyId = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -416,11 +426,11 @@ describe('assignSquadToArmy', () => {
     });
 
     try {
-      await assignSquadToArmy(id as any, armyId as any);
+      await assignPlaneToArmy(id as any, armyId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`squad with id:${id} not found`);
+      expect((error as any).message).toBe(`plane with id:${id} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -441,7 +451,7 @@ describe('assignSquadToArmy', () => {
     });
 
     try {
-      await assignSquadToArmy(id as any, armyId as any);
+      await assignPlaneToArmy(id as any, armyId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
@@ -452,11 +462,11 @@ describe('assignSquadToArmy', () => {
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should return Squad after assigning', async () => {
+  it('should return plane after assigning', async () => {
     const id = 1;
     const armyId = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -466,9 +476,9 @@ describe('assignSquadToArmy', () => {
       release: releaseMock,
     });
 
-    const Squad = await assignSquadToArmy(id as any, armyId as any);
+    const plane = await assignPlaneToArmy(id as any, armyId as any);
 
-    expect(Squad).toEqual(squadsForTest[0]);
+    expect(plane).toEqual(planesForTest[0]);
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
@@ -486,7 +496,7 @@ describe('assignSquadToArmy', () => {
     );
 
     try {
-      await assignSquadToArmy(id as any, armyId as any);
+      await assignPlaneToArmy(id as any, armyId as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
@@ -497,15 +507,15 @@ describe('assignSquadToArmy', () => {
   });
 });
 
-describe('removeSquadFromArmy', () => {
+describe('removePlaneFromArmy', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return Squad after removing from army', async () => {
+  it('should return plane after removing from army', async () => {
     const id = 1;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -515,21 +525,21 @@ describe('removeSquadFromArmy', () => {
       release: releaseMock,
     });
 
-    const Squad = await removeSquadFromArmy(id as any);
+    const plane = await removePlaneFromArmy(id as any);
 
-    expect(Squad).toBeTruthy();
-    expect(Squad.id).toBe(id);
-    expect(Squad.name).toBe('squad1');
+    expect(plane).toBeTruthy();
+    expect(plane.id).toBe(id);
+    expect(plane.name).toBe('plane1');
 
     expect(pool.connect).toHaveBeenCalled();
     expect(queryMock).toHaveBeenCalled();
     expect(releaseMock).toHaveBeenCalled();
   });
 
-  it('should throw error if wrong id or Squad does not exist', async () => {
+  it('should throw error if wrong id or plane does not exist', async () => {
     const id = 99;
     const queryMock = jest.fn().mockResolvedValue({
-      rows: squadsForTest.filter((a) => a.id === id),
+      rows: planesForTest.filter((a) => a.id === id),
     });
 
     const releaseMock = jest.fn();
@@ -540,11 +550,11 @@ describe('removeSquadFromArmy', () => {
     });
 
     try {
-      await removeSquadFromArmy(id as any);
+      await removePlaneFromArmy(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(HttpException);
       expect((error as HttpException).status).toBe(404);
-      expect((error as any).message).toBe(`squad with id:${id} not found`);
+      expect((error as any).message).toBe(`plane with id:${id} not found`);
     }
 
     expect(pool.connect).toHaveBeenCalled();
@@ -561,7 +571,7 @@ describe('removeSquadFromArmy', () => {
     );
 
     try {
-      await removeSquadFromArmy(id as any);
+      await removePlaneFromArmy(id as any);
     } catch (error) {
       expect(error).toBeInstanceOf(Error);
       expect((error as any).message).toBe('Connection error');
