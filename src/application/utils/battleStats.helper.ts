@@ -109,17 +109,17 @@ export async function showStats(id: string, enemyId: string) {
   
       const battleStats = {
         yourStats: {
-          yourTanksStrength: parseFloat(armyTanksStrength),
-          yourPlanesAirStrength: parseFloat(armyPlanesStrengthAir),
-          yourPlanesSurfaceStrength: parseFloat(armyPlanesStrengthSurface),
-          yourSquadsStrength: parseFloat(armySquadsStrength),
+          yourTanksStrength: parseInt(armyTanksStrength),
+          yourPlanesAirStrength: parseInt(armyPlanesStrengthAir),
+          yourPlanesSurfaceStrength: parseInt(armyPlanesStrengthSurface),
+          yourSquadsStrength: parseInt(armySquadsStrength),
           yourAdvantage: resultUser.rows[0].advantage,
         },
         enemyStats: {
-          enemyTanksStrength: parseFloat(armyTanksEnemyStrength),
-          enemyPlanesAirStrength: parseFloat(armyPlanesEnemyStrengthAir),
-          enemyPlanesSurfaceStrength: parseFloat(armyPlanesEnemyStrengthSurface),
-          enemySquadsStrength: parseFloat(armySquadsEnemyStrength),
+          enemyTanksStrength: parseInt(armyTanksEnemyStrength),
+          enemyPlanesAirStrength: parseInt(armyPlanesEnemyStrengthAir),
+          enemyPlanesSurfaceStrength: parseInt(armyPlanesEnemyStrengthSurface),
+          enemySquadsStrength: parseInt(armySquadsEnemyStrength),
           enemyAdvantage: resultUserEnemy.rows[0].advantage,
         },
       };

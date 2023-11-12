@@ -3,7 +3,10 @@ import HttpStatusCode from '../application/exceptions/statusCode';
 import { BattleState } from '../application/utils/battle-state';
 import { UserCreateSchema, User } from '../auth/types/auth.interfaces';
 import pool from '../application/db/db';
-import { battleTracker, showStats } from '../application/utils/battleStats.helper';
+import {
+  battleTracker,
+  showStats,
+} from '../application/utils/battleStats.helper';
 
 export async function getUsers(queryParameters?: any): Promise<User[]> {
   const client = await pool.connect();
@@ -156,7 +159,6 @@ export async function battle(id: string, enemyId: string) {
       battleStats: await battleStats,
     };
   } catch (err) {
-
     throw err;
   } finally {
     client.release();
@@ -262,31 +264,31 @@ export async function surfaceBattle(id: string, enemyId: string) {
       battleStats.enemyStats.enemyPlanesSurfaceStrength +
       battleStats.enemyStats.enemyTanksStrength +
       battleStats.enemyStats.enemySquadsStrength;
-    let coin = Math.random();
+    let coin: any = Math.random().toFixed(2);
 
     if (coin >= 0.7) {
-      yourStr *= 1.05;
+      yourStr = yourStr * 1.05;
     } else if (coin <= 0.4) {
       enemyStr *= 1.05;
     }
-    let result = yourStr - enemyStr
+    let result = yourStr - enemyStr;
     if (result > 0) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);
       return {
-        msg: `Congratulations! You won! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
+        msg: `Congratulations! You won! with your str ${yourStr.toFixed(0)} versus enemy str ${enemyStr.toFixed(0)}. Coin was ${coin}`,
       };
     } else if (result < 0) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);
       return {
-        msg: `Sadly but you lose! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
+        msg: `Sadly but you lose! with your str ${yourStr.toFixed(0)} versus enemy str ${enemyStr.toFixed(0)}. Coin was ${coin}`,
       };
     } else {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);
       return {
-        msg: `Somehow it was a draw! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
+        msg: `Somehow it was a draw! with your str ${yourStr.toFixed(0)} versus enemy str ${enemyStr.toFixed(0)}. Coin was ${coin}`,
       };
     }
   } catch (err) {
