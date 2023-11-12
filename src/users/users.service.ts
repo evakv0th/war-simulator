@@ -17,7 +17,6 @@ export async function getUsers(queryParameters?: any): Promise<User[]> {
       values.push(`%${name}%`);
     }
 
-
     const result = await client.query(query, values);
     return result.rows;
   } catch (err) {
@@ -118,6 +117,7 @@ export async function deleteUser(id: string): Promise<User> {
 }
 
 export async function battle(id: string, enemyId: string) {
+  console.log(battleTracker.getState());
   if (battleTracker.getState() !== 'not_started') {
     throw new HttpException(
       HttpStatusCode.BAD_REQUEST,
@@ -132,7 +132,7 @@ export async function battle(id: string, enemyId: string) {
   const client = await pool.connect();
   try {
     const battleStats = await showStats(id, enemyId);
-
+    console.log(battleStats);
     if (
       battleStats.yourStats.yourPlanesAirStrength === 0 ||
       battleStats.yourStats.yourTanksStrength === 0 ||
@@ -169,7 +169,6 @@ export async function battle(id: string, enemyId: string) {
 }
 
 export async function airBattle(id: string, enemyId: string) {
-  console.log(battleTracker.getEnemyId());
   if (battleTracker.getState() !== 'in_progress') {
     throw new HttpException(
       HttpStatusCode.BAD_REQUEST,
@@ -190,6 +189,7 @@ export async function airBattle(id: string, enemyId: string) {
   try {
     const battleStats = await showStats(id, enemyId);
 
+    console.log(battleStats);
     if (
       battleStats.yourStats.yourPlanesAirStrength >
       battleStats.enemyStats.enemyPlanesAirStrength
@@ -279,13 +279,15 @@ export async function surfaceBattle(id: string, enemyId: string) {
       enemyStr *= 1.05;
     }
     console.log(yourStr, enemyStr, 'yours and enemy str for final battle');
-    if (yourStr > enemyStr) {
+    console.log(typeof yourStr, typeof enemyStr)
+    let result = yourStr - enemyStr
+    if (result > 0) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);
       return {
         msg: `Congratulations! You won! with your str ${yourStr} versus enemy str ${enemyStr}. Coin was ${coin}`,
       };
-    } else if (enemyStr < yourStr) {
+    } else if (result < 0) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);
       return {
@@ -305,7 +307,6 @@ export async function surfaceBattle(id: string, enemyId: string) {
     client.release();
   }
 }
-
 export async function showStats(id: string, enemyId: string) {
   const client = await pool.connect();
   try {
@@ -365,10 +366,10 @@ export async function showStats(id: string, enemyId: string) {
     let armyPlanesEnemyStrengthSurface =
       armyPlanesEnemyQSurface.rows[0].sum || 0;
     const totalSquadStrengthQuery = `SELECT SUM(weapons.strength)
-        FROM squads
-        JOIN squads_weapons ON squads.id = squads_weapons.squad_id
-        JOIN weapons ON squads_weapons.weapon_id = weapons.id
-        WHERE squads.army_id = $1`;
+          FROM squads
+          JOIN squads_weapons ON squads.id = squads_weapons.squad_id
+          JOIN weapons ON squads_weapons.weapon_id = weapons.id
+          WHERE squads.army_id = $1`;
 
     const armySquadsQ = await client.query(totalSquadStrengthQuery, [armyId]);
     let armySquadsStrength = armySquadsQ.rows[0].sum || 0;
