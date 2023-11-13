@@ -9,10 +9,8 @@ import {
   removeSquadFromArmy,
 } from '../squads.controller';
 import * as squadsService from '../squads.service';
-import HttpException from '../../application/exceptions/http-exceptions';
 import { squadsForTest } from '../types/squads.for-test.array';
 import { ValidatedRequest } from 'express-joi-validation';
-import { TankRequest } from '../../tanks/types/tanks.interfaces';
 import HttpStatusCode from '../../application/exceptions/statusCode';
 import { SquadRequest } from '../types/squads.interfaces';
 

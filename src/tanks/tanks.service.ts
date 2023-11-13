@@ -2,14 +2,13 @@ import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
 import { getArmyById } from "../armies/armies.service";
 import pool from "../application/db/db";
-import { getUserById } from "../users/users.service";
 import { TanksCreateSchema, Tank } from "./types/tanks.interfaces";
 
 export async function getTanks(): Promise<Tank[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM tanks";
+    const query = "SELECT * FROM tanks";
 
     const result = await client.query(query);
     return result.rows;
@@ -24,7 +23,7 @@ export async function getTankById(id: string): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM tanks WHERE id = $1";
+    const query = "SELECT * FROM tanks WHERE id = $1";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -88,7 +87,7 @@ export async function updateTank(
   const { name, strength, fuel_req } = updateData;
   const values: any[] = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
@@ -127,7 +126,7 @@ export async function deleteTank(id: string): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    let query = "DELETE FROM tanks WHERE id=$1;";
+    const query = "DELETE FROM tanks WHERE id=$1;";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -194,7 +193,7 @@ export async function removeTankFromArmy(id: string): Promise<Tank> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM tanks WHERE id = $1";
+    const query = "SELECT * FROM tanks WHERE id = $1";
     const values = [id];
     const tank = await client.query(query, values);
     if (tank.rows.length <= 0) {
@@ -203,7 +202,7 @@ export async function removeTankFromArmy(id: string): Promise<Tank> {
         `tank with id:${id} not found`
       );
     }
-    let queryToRemove =
+    const queryToRemove =
       "UPDATE tanks SET army_id = null WHERE id=$1 RETURNING *";
     const result = await client.query(queryToRemove, values);
     return result.rows[0];

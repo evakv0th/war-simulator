@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 import { generateToken } from '../auth.tokenGenerate';
-import { User } from '../types/auth.interfaces';
 import { sha256 } from '../auth.sha256';
 
 dotenv.config();
@@ -20,7 +19,6 @@ describe('generateToken', () => {
       name: 'testUser',
     };
 
-    const sKey = 'kitty';
     const mockedHeader = 'mockedHeader';
     const mockedPayload = 'mockedPayload';
     const mockedSignature = 'mockedSignature';

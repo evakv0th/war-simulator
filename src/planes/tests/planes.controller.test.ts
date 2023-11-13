@@ -9,7 +9,6 @@ import {
   removePlaneFromArmy,
 } from '../planes.controller';
 import * as planesService from '../planes.service';
-import HttpException from '../../application/exceptions/http-exceptions';
 import { planesForTest } from '../types/plames.for-test.array';
 import { ValidatedRequest } from 'express-joi-validation';
 import HttpStatusCode from '../../application/exceptions/statusCode';

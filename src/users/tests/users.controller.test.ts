@@ -10,10 +10,7 @@ import {
   AuthenticatedRequest,
 } from '../users.controller';
 import * as usersService from '../users.service';
-import HttpException from '../../application/exceptions/http-exceptions';
 import { usersForTest } from '../../auth/types/auth.for-test.array';
-import { ValidatedRequest } from 'express-joi-validation';
-import { UserRequest } from '../../auth/types/user-login-schema';
 import HttpStatusCode from '../../application/exceptions/statusCode';
 
 jest.mock('../users.service');

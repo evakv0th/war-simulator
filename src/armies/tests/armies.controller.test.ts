@@ -8,10 +8,8 @@ import {
   assignArmyToUser,
 } from '../armies.controller';
 import * as armiesService from '../armies.service';
-import HttpException from '../../application/exceptions/http-exceptions';
 import { armiesForTest } from '../types/armies.for-test.array';
 import { ValidatedRequest } from 'express-joi-validation';
-import { TankRequest } from '../../tanks/types/tanks.interfaces';
 import HttpStatusCode from '../../application/exceptions/statusCode';
 import { ArmyRequest } from '../types/armies.interfaces';
 

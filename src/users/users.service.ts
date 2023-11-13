@@ -1,6 +1,5 @@
 import HttpException from '../application/exceptions/http-exceptions';
 import HttpStatusCode from '../application/exceptions/statusCode';
-import { BattleState } from '../application/utils/battle-state';
 import { UserCreateSchema, User } from '../auth/types/auth.interfaces';
 import pool from '../application/db/db';
 import {
@@ -34,7 +33,7 @@ export async function getUserById(id: string): Promise<User> {
   const client = await pool.connect();
 
   try {
-    let query = 'SELECT * FROM users WHERE id = $1';
+    const query = 'SELECT * FROM users WHERE id = $1';
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -44,7 +43,7 @@ export async function getUserById(id: string): Promise<User> {
         `user with id:${id} not found`,
       );
     }
-    let queryArmy = 'SELECT * FROM armies WHERE user_id = $1';
+    const queryArmy = 'SELECT * FROM armies WHERE user_id = $1';
     const army = await client.query(queryArmy, [id]);
     return { ...result.rows[0], army: army.rows[0] };
   } catch (err) {
@@ -62,7 +61,7 @@ export async function updateUser(
   const { name, password, email, type } = updateData;
   const values = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
@@ -104,7 +103,7 @@ export async function deleteUser(id: string): Promise<User> {
   const client = await pool.connect();
 
   try {
-    let query = 'DELETE FROM users WHERE id=$1;';
+    const query = 'DELETE FROM users WHERE id=$1;';
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -264,14 +263,14 @@ export async function surfaceBattle(id: string, enemyId: string) {
       battleStats.enemyStats.enemyPlanesSurfaceStrength +
       battleStats.enemyStats.enemyTanksStrength +
       battleStats.enemyStats.enemySquadsStrength;
-    let coin: any = Math.random().toFixed(2);
+    const coin: any = Math.random().toFixed(2);
 
     if (coin >= 0.7) {
       yourStr = yourStr * 1.05;
     } else if (coin <= 0.4) {
       enemyStr *= 1.05;
     }
-    let result = yourStr - enemyStr;
+    const result = yourStr - enemyStr;
     if (result > 0) {
       battleTracker.notStarted();
       battleTracker.setEnemyId(null);

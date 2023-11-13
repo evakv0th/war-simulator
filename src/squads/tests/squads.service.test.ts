@@ -10,7 +10,7 @@ import {
 import { pool } from '../../application/db/db';
 import { squadsForTest } from '../types/squads.for-test.array';
 import HttpException from '../../application/exceptions/http-exceptions';
-import { Squad, SquadsCreateSchema } from '../types/squads.interfaces';
+import { SquadsCreateSchema } from '../types/squads.interfaces';
 import { armiesForTest } from '../../armies/types/armies.for-test.array';
 
 jest.mock('../../application/db/db');

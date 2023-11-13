@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { getTankById, getTanks, postTank, updateTank, deleteTank, assignTankToArmy, removeTankFromArmy } from '../tanks.controller';
 import * as tanksService from '../tanks.service';
-import HttpException from '../../application/exceptions/http-exceptions';
 import { tanksForTest } from '../types/tanks.for-test.array';
 import { ValidatedRequest } from 'express-joi-validation';
 import { TankRequest } from '../types/tanks.interfaces';

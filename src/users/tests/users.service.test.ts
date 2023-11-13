@@ -289,12 +289,6 @@ describe('deleteUser', () => {
 });
 
 describe('battle', () => {
-  let mockShowStats: jest.Mock;
-
-  beforeEach(() => {
-    mockShowStats = jest.fn();
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -370,23 +364,6 @@ describe('battle', () => {
       query: queryMock,
       release: releaseMock,
     });
-    const mockBattleStats = {
-      yourStats: {
-        yourPlanesAirStrength: 0,
-        yourTanksStrength: 0,
-        yourSquadsStrength: 0,
-        yourPlanesSurfaceStrength: 0,
-        yourAdvantage: 'air',
-      },
-      enemyStats: {
-        enemyPlanesAirStrength: 100,
-        enemyTanksStrength: 100,
-        enemySquadsStrength: 100,
-        enemyPlanesSurfaceStrength: 100,
-        enemyAdvantage: 'air',
-      },
-    };
-    mockShowStats.mockReturnValue(mockBattleStats);
 
     try {
       await battle(id as any, enemyId as any);
@@ -404,12 +381,6 @@ describe('battle', () => {
 });
 
 describe('airBattle', () => {
-  let mockShowStats: jest.Mock;
-
-  beforeEach(() => {
-    mockShowStats = jest.fn();
-  });
-
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -525,11 +496,6 @@ describe('airBattle', () => {
 });
 
 describe('surfaceBattle', () => {
-  let mockShowStats: jest.Mock;
-
-  beforeEach(() => {
-    mockShowStats = jest.fn();
-  });
 
   afterEach(() => {
     jest.clearAllMocks();

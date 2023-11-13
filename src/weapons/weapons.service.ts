@@ -1,6 +1,5 @@
 import HttpException from "../application/exceptions/http-exceptions";
 import HttpStatusCode from "../application/exceptions/statusCode";
-import { getArmyById } from "../armies/armies.service";
 import pool from "../application/db/db";
 import { getSquadById } from "../squads/squads.service";
 import { WeaponsCreateSchema, Weapon } from "./types/weapons.interfaces";
@@ -9,7 +8,7 @@ export async function getWeapons(): Promise<Weapon[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM weapons";
+    const query = "SELECT * FROM weapons";
 
     const result = await client.query(query);
     return result.rows;
@@ -24,7 +23,7 @@ export async function getWeaponById(id: string): Promise<Weapon> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM weapons WHERE id = $1";
+    const query = "SELECT * FROM weapons WHERE id = $1";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -91,7 +90,7 @@ export async function updateWeapon(
   const { name, strength, bullets_req } = updateData;
   const values: any[] = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
@@ -134,7 +133,7 @@ export async function deleteWeapon(id: string): Promise<Weapon> {
       "DELETE FROM squads_weapons WHERE weapon_id = $1;";
     const values = [id];
     await client.query(deleteRelationsQuery, values);
-    let query = "DELETE FROM weapons WHERE id=$1;";
+    const query = "DELETE FROM weapons WHERE id=$1;";
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {

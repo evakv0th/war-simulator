@@ -8,7 +8,7 @@ export async function getArmies(): Promise<Army[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM armies";
+    const query = "SELECT * FROM armies";
 
     const result = await client.query(query);
     return result.rows;
@@ -23,7 +23,7 @@ export async function getArmyById(id: string): Promise<Army> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM armies WHERE id = $1";
+    const query = "SELECT * FROM armies WHERE id = $1";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -114,7 +114,7 @@ export async function updateArmy(
   const { name, advantage, fuel_amount, bullets_amount } = updateData;
   const values: any[] = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }

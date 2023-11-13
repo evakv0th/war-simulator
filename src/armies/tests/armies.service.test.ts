@@ -9,7 +9,6 @@ import {
 import { pool } from '../../application/db/db';
 import HttpException from '../../application/exceptions/http-exceptions';
 import {
-  Army,
   ArmiesCreateSchema,
   ArmyAdvantage,
 } from '../types/armies.interfaces';

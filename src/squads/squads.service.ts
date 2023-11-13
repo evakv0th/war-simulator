@@ -8,7 +8,7 @@ export async function getSquads(): Promise<Squad[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM squads";
+    const query = "SELECT * FROM squads";
 
     const result = await client.query(query);
     return result.rows;
@@ -23,7 +23,7 @@ export async function getSquadById(id: string): Promise<Squad> {
   const client = await pool.connect();
 
   try {
-    let query = `SELECT * FROM squads WHERE squads.id = $1;`;
+    const query = `SELECT * FROM squads WHERE squads.id = $1;`;
     const values = [id];
     const result = await client.query(query, values);
 
@@ -33,7 +33,7 @@ export async function getSquadById(id: string): Promise<Squad> {
         `squad with id:${id} not found`
       );
     }
-    let queryWeapons = `SELECT weapons.name, weapons.strength, weapons.bullets_req
+    const queryWeapons = `SELECT weapons.name, weapons.strength, weapons.bullets_req
     FROM weapons
     JOIN squads_weapons ON weapons.id = squads_weapons.weapon_id
     WHERE squads_weapons.squad_id = $1;`;
@@ -101,7 +101,7 @@ export async function updateSquad(
   const { name } = updateData;
   const values: any[] = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   } else {
@@ -137,7 +137,7 @@ export async function deleteSquad(id: string): Promise<Squad> {
     const values = [id];
     await client.query(deleteRelationsQuery, values);
 
-    let query = "DELETE FROM squads WHERE id=$1;";
+    const query = "DELETE FROM squads WHERE id=$1;";
     const result = await client.query(query, values);
     return result.rows[0];
   } catch (err) {
@@ -218,7 +218,7 @@ export async function removeSquadFromArmy(id: string): Promise<Squad> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM squads WHERE id = $1";
+    const query = "SELECT * FROM squads WHERE id = $1";
     const values = [id];
     const squad = await client.query(query, values);
     if (squad.rows.length <= 0) {
@@ -227,7 +227,7 @@ export async function removeSquadFromArmy(id: string): Promise<Squad> {
         `squad with id:${id} not found`
       );
     }
-    let queryToRemove =
+    const queryToRemove =
       "UPDATE squads SET army_id = null WHERE id=$1 RETURNING *";
     const result = await client.query(queryToRemove, values);
     return result.rows[0];

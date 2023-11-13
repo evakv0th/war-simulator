@@ -39,7 +39,7 @@ export async function authenticateToken(
       const client = await pool.connect();
       let result;
       try {
-        let query = 'SELECT * FROM users WHERE id =$1';
+        const query = 'SELECT * FROM users WHERE id =$1';
         const values = [];
         values.push(decodedPayload.sub);
 

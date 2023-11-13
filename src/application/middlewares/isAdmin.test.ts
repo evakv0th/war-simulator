@@ -1,6 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { isAdmin } from './isAdmin';
-import { AuthenticatedRequest, authenticateToken } from './authenticateToken'; 
+import { AuthenticatedRequest } from './authenticateToken'; 
 import { User } from '../../auth/types/auth.interfaces';
 
 

@@ -4,9 +4,8 @@ import * as usersService from './users.service';
 import { Request, Response } from 'express';
 import { UserRequest } from '../auth/types/user-login-schema';
 import HttpException from '../application/exceptions/http-exceptions';
-import { User } from '../auth/types/auth.interfaces';
 
-export type AuthenticatedRequest<T> = Request & { user: User };
+export type AuthenticatedRequest<T> = Request & { user: T };
 
 export async function getUsers(req: Request, res: Response) {
   try {

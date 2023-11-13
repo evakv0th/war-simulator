@@ -8,7 +8,7 @@ export async function getPlanes(): Promise<Plane[]> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM planes";
+    const query = "SELECT * FROM planes";
 
     const result = await client.query(query);
     return result.rows;
@@ -23,7 +23,7 @@ export async function getPlaneById(id: string): Promise<Plane> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM planes WHERE id = $1";
+    const query = "SELECT * FROM planes WHERE id = $1";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -88,7 +88,7 @@ export async function updatePlane(
   const { name, air_strength, surface_strength, fuel_req } = updateData;
   const values: any[] = [id];
 
-  let arrayWithChanges = [];
+  const arrayWithChanges = [];
   if (name) {
     arrayWithChanges.push(`name=$${values.push(name)}`);
   }
@@ -130,7 +130,7 @@ export async function deletePlane(id: string): Promise<Plane> {
   const client = await pool.connect();
 
   try {
-    let query = "DELETE FROM planes WHERE id=$1;";
+    const query = "DELETE FROM planes WHERE id=$1;";
     const values = [];
     values.push(id);
     const result = await client.query(query, values);
@@ -204,7 +204,7 @@ export async function removePlaneFromArmy(id: string): Promise<Plane> {
   const client = await pool.connect();
 
   try {
-    let query = "SELECT * FROM planes WHERE id = $1";
+    const query = "SELECT * FROM planes WHERE id = $1";
     const values = [id];
     const plane = await client.query(query, values);
     if (plane.rows.length <= 0) {
@@ -213,7 +213,7 @@ export async function removePlaneFromArmy(id: string): Promise<Plane> {
         `plane with id:${id} not found`
       );
     }
-    let queryToRemove =
+    const queryToRemove =
       "UPDATE planes SET army_id = null WHERE id=$1 RETURNING *";
     const result = await client.query(queryToRemove, values);
     return result.rows[0];

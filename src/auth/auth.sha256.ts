@@ -9,7 +9,7 @@ export const sha256: any = (ascii: string) => {
   let i, j; // Used as a counter across the whole file
   let result = "";
 
-  let words: any[] = [];
+  const words: any[] = [];
   const asciiBitLength = ascii[lengthProperty] * 8;
 
   
@@ -19,7 +19,7 @@ export const sha256: any = (ascii: string) => {
   // (we actually calculate the first 64, but extra values are just ignored)
   let hash = (sha256.h  = sha256.h || []);
   // Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
-  let k = (sha256.k = sha256.k || []);
+  const k = (sha256.k = sha256.k || []);
   let primeCounter = k[lengthProperty];
 
 
@@ -46,23 +46,23 @@ export const sha256: any = (ascii: string) => {
 
   // process each chunk
   for (j = 0; j < words[lengthProperty]; ) {
-    let w = words.slice(j, (j += 16)); // The message is expanded into 64 words as part of the iteration
-    let oldHash = hash;
+    const w = words.slice(j, (j += 16)); // The message is expanded into 64 words as part of the iteration
+    const oldHash = hash;
     // This is now the undefinedworking hash", often labelled as variables a...g
     // (we have to truncate as well, otherwise extra entries at the end accumulate
     hash = hash.slice(0, 8);
 
     for (i = 0; i < 64; i++) {
-        let i2 = i + j;
+        // const i2 = i + j;
       // Expand the message into 64 words
       // Used below if
-      let w15 = w[i - 15],
+      const w15 = w[i - 15],
         w2 = w[i - 2];
 
       // Iterate
-      let a = hash[0],
+      const a = hash[0],
         e = hash[4];
-        let temp1 =
+        const temp1 =
         hash[7] +
         (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) + // S1
         ((e & hash[5]) ^ (~e & hash[6])) + // ch
@@ -77,7 +77,7 @@ export const sha256: any = (ascii: string) => {
                 (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10))) | // s1
               0);
       // This is only used once, so *could* be moved below, but it only saves 4 bytes and makes things unreadble
-      let temp2 =
+      const temp2 =
         (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) + // S0
         ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2])); // maj
 
@@ -92,7 +92,7 @@ export const sha256: any = (ascii: string) => {
 
   for (i = 0; i < 8; i++) {
     for (j = 3; j + 1; j--) {
-        let b = (hash[i] >> (j * 8)) & 255;
+        const b = (hash[i] >> (j * 8)) & 255;
       result += (b < 16 ? 0 : "") + b.toString(16);
     }
   }
