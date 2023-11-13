@@ -1,4 +1,4 @@
-name: jestTesting
+name: test + lint
 run-name: ${{ github.actor }} is testing his jest
 on: [push]
 jobs:
@@ -14,3 +14,4 @@ jobs:
           node-version: '14'
       - run: npm ci
       - run: npm test
+      - run: npm run lint
